@@ -16,8 +16,8 @@
 <br/>
 
 [![npm version](https://img.shields.io/npm/v/fluksos?style=flat-square&color=black)](https://www.npmjs.com/package/fluksos)
-[![License: MIT](https://img.shields.io/github/license/pasqualinigui/fluksos?style=flat-square&color=black)](https://github.com/pasqualinigui/fluksos/blob/main/LICENSE)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-black?style=flat-square)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=flat-square)](https://github.com/pasqualinigui/fluksos/blob/main/LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D22.0.0-black?style=flat-square)](https://nodejs.org/)
 [![pnpm](https://img.shields.io/badge/pnpm-11.5.2-black?style=flat-square)](https://pnpm.io/)
 [![GitHub stars](https://img.shields.io/github/stars/pasqualinigui/fluksos?style=flat-square&color=black)](https://github.com/pasqualinigui/fluksos/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/pasqualinigui/fluksos?style=flat-square&color=black)](https://github.com/pasqualinigui/fluksos/issues)
@@ -59,7 +59,7 @@ cd my-app
 pnpm dev
 ```
 
-> **Requires**: Node.js >= 20, pnpm >= 9 installed globally (`npm install -g pnpm`).
+> **Requires**: Node.js >= 22, pnpm >= 9 installed globally (`npm install -g pnpm`).
 
 ---
 
