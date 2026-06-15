@@ -202,6 +202,9 @@ async function assertPreconditions(ctx) {
 		execSync("pnpm --version", { stdio: "ignore" });
 	} catch {
 		ctx.log.error("pnpm is not installed or not available in PATH.");
+		ctx.log.info("To resolve this, please install it globally:");
+		ctx.log.info("  > npm install -g pnpm");
+		ctx.log.info("  > Or via Corepack: corepack enable pnpm");
 		process.exit(1);
 	}
 }
