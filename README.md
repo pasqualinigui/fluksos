@@ -1,13 +1,13 @@
 <div align="center">
 
-```
+<pre style="font-family: monospace; display: inline-block; text-align: left;">
 ███████╗██╗     ██╗   ██╗██╗  ██╗███████╗ ██████╗ ███████╗
 ██╔════╝██║     ██║   ██║██║ ██╔╝██╔════╝██╔═══██╗██╔════╝
 █████╗  ██║     ██║   ██║█████╔╝ ███████╗██║   ██║███████╗
 ██╔══╝  ██║     ██║   ██║██╔═██╗ ╚════██║██║   ██║╚════██║
 ██║     ███████╗╚██████╔╝██║  ██╗███████║╚██████╔╝███████║
 ╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚══════╝
-```
+</pre>
 
 **The Enterprise Stack Generator**
 
@@ -16,11 +16,11 @@
 <br/>
 
 [![npm version](https://img.shields.io/npm/v/fluksos?style=flat-square&color=black)](https://www.npmjs.com/package/fluksos)
-[![License: MIT](https://img.shields.io/github/license/pasqualinigui/fluksos?style=flat-square&color=black)](./LICENSE)
+[![License: MIT](https://img.shields.io/github/license/pasqualinigui/fluksos?style=flat-square&color=black)](https://github.com/pasqualinigui/fluksos/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20.0.0-black?style=flat-square)](https://nodejs.org/)
 [![pnpm](https://img.shields.io/badge/pnpm-11.5.2-black?style=flat-square)](https://pnpm.io/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-black?style=flat-square)](./CONTRIBUTING.md)
-[![Stars](https://img.shields.io/github/stars/pasqualinigui/fluksos?style=flat-square&color=black)](https://github.com/pasqualinigui/fluksos)
+[![GitHub stars](https://img.shields.io/github/stars/pasqualinigui/fluksos?style=flat-square&color=black)](https://github.com/pasqualinigui/fluksos/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/pasqualinigui/fluksos?style=flat-square&color=black)](https://github.com/pasqualinigui/fluksos/issues)
 
 </div>
 
