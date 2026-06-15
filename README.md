@@ -19,7 +19,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=flat-square)](https://github.com/pasqualinigui/fluksos/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22.0.0-black?style=flat-square)](https://nodejs.org/)
 [![pnpm](https://img.shields.io/badge/pnpm-11.5.2-black?style=flat-square)](https://pnpm.io/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-black?style=flat-square&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 </div>
 
