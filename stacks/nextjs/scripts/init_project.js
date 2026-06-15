@@ -463,6 +463,13 @@ async function applyTierTemplates(ctx) {
 	if (ctx.tier === 3) {
 		copyDirTemplate(path.join(ctx.templatesRoot, "app-tier-3"), ctx.appDir);
 		
+		// Auto-create .env from .env.example so drizzle-kit and the app work out of the box
+		const envExample = path.join(ctx.appDir, ".env.example");
+		const envFile = path.join(ctx.appDir, ".env");
+		if (fs.existsSync(envExample) && !fs.existsSync(envFile)) {
+			fs.copyFileSync(envExample, envFile);
+		}
+
 		mergePackageJson(path.join(ctx.appDir, "package.json"), {
 			scripts: {
 				"db:generate": "drizzle-kit generate",
