@@ -9,12 +9,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const STACK_VERSIONS = {
-	packageManager: "pnpm@11.5.2",
+	packageManager: "pnpm@11.6.0",
 	next: "16.2.9",
 	react: "19.2.7",
 	reactDom: "19.2.7",
-	nextThemes: "0.4.4",
-	lucideReact: "0.469.0",
+	nextThemes: "0.4.6",
+	lucideReact: "1.18.0",
 	typescript: "6.0.3",
 	biome: "2.4.16",
 	valibot: "1.4.1",
@@ -454,6 +454,14 @@ async function applyTierTemplates(ctx) {
 	}
 	if (ctx.tier === 3) {
 		copyDirTemplate(path.join(ctx.templatesRoot, "app-tier-3"), ctx.appDir);
+		
+		mergePackageJson(path.join(ctx.appDir, "package.json"), {
+			scripts: {
+				"db:generate": "drizzle-kit generate",
+				"db:push": "NODE_ENV=development drizzle-kit push",
+				"db:studio": "drizzle-kit studio",
+			},
+		});
 	}
 }
 
