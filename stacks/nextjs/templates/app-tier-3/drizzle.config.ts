@@ -1,5 +1,8 @@
 import { defineConfig } from 'drizzle-kit';
 
+// We explicitly read from process.env instead of importing our typed 'env.ts' here.
+// This prevents drizzle-kit from crashing if non-database environment variables 
+// (like BETTER_AUTH_SECRET or NODE_ENV) are missing during isolated CLI commands.
 const databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl) {
