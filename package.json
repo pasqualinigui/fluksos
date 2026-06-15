@@ -1,6 +1,6 @@
 {
   "name": "fluksos",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "The Enterprise Stack Generator — Deterministic scaffolds for modern stacks",
   "type": "module",
   "bin": {
