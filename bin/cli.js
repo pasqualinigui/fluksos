@@ -144,7 +144,9 @@ function printHelp() {
 
 	console.log("\x1b[1m\x1b[36m💡 EXAMPLES\x1b[0m");
 	console.log("  \x1b[90m# Scaffold a Full-Stack Next.js project\x1b[0m");
-	console.log("  $ fluksos init nextjs my-app ./my-app --tier 3\n");
+	console.log("  $ fluksos init nextjs my-app --tier 3\n");
+	console.log("  \x1b[90m# Initialize in the current directory\x1b[0m");
+	console.log("  $ fluksos init nextjs . --tier 3\n");
 	console.log("  \x1b[90m# View specific stack documentation\x1b[0m");
 	console.log("  $ fluksos nextjs --help\n");
 }
@@ -234,7 +236,7 @@ switch (command) {
 				`Available stacks: \x1b[32m${Object.keys(STACK_REGISTRY).join(", ")}\x1b[0m`,
 			);
 			console.log(
-				`Example: fluksos init \x1b[32mnextjs\x1b[0m my-app ./my-app`,
+				`Example: fluksos init \x1b[32mnextjs\x1b[0m my-app --tier 3`,
 			);
 			process.exit(1);
 		}

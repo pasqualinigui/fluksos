@@ -167,9 +167,17 @@ function parseArgs(argv) {
 		}
 	}
 
-	if (!projectName || !targetDirectory || ![1, 2, 3].includes(tier)) {
+	// Simplify UX by making target directory optional
+	if (projectName === ".") {
+		targetDirectory = ".";
+		projectName = path.basename(process.cwd());
+	} else if (projectName && !targetDirectory) {
+		targetDirectory = `./${projectName}`;
+	}
+
+	if (!projectName || ![1, 2, 3].includes(tier)) {
 		console.error(
-			"[ERR] Usage: node init_project.js <project-name> <target-directory> [--tier 1|2|3] [--no-install] [--no-git]",
+			"[ERR] Usage: node init_project.js <project-name> [target-directory] [--tier 1|2|3] [--no-install] [--no-git]",
 		);
 		process.exit(1);
 	}
