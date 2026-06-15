@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { validateArchitecture } from '../validate-architecture.js';
+import { validateArchitecture } from '../scripts/validate-architecture.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 

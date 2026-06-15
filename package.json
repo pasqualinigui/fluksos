@@ -6,6 +6,10 @@
   "bin": {
     "fluksos": "./bin/cli.js"
   },
+  "files": [
+    "bin",
+    "stacks"
+  ],
   "scripts": {
     "start": "node ./bin/cli.js"
   },

@@ -1,13 +1,13 @@
+import path from 'path';
 import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   output: 'standalone',
-  experimental: {
-    typedRoutes: true,
-    instrumentationHook: true
+  typedRoutes: true,
+  turbopack: {
+    root: path.join(__dirname, '../../')
   },
-  reactCompiler: true,
   images: {
     formats: ['image/avif', 'image/webp']
   },
@@ -21,8 +21,7 @@ const nextConfig: NextConfig = {
 const sentryOptions = {
   silent: true,
   widenClientFileUpload: true,
-  hideSourceMaps: true,
-  disableLogger: true
+  hideSourceMaps: true
 };
 
 export default withSentryConfig(nextConfig, sentryOptions);

@@ -1,24 +1,24 @@
 export function GET() {
-  const content = `# NomeDoProduto
+	const content = `# ProductName
 
-> Descrição concisa e factual da aplicação para mecanismos de resposta por IA.
+> A concise and factual description of the application for AI-powered response mechanisms.
 
-## Documentação
+## Documentation
 
-- [Docs](/docs): Documentação principal do produto
-- [API](/docs/api): Referência da API
-- [Changelog](/changelog): Histórico de alterações
+- [Docs](/docs): Main product documentation
+- [API](/docs/api): API reference
+- [Changelog](/changelog): Change history
 
-## Contato
+## Contact
 
-- Site: https://dominio.com
-- GitHub: https://github.com/usuario/repositorio
-`
+- Site: https://domain.com
+- GitHub: https://github.com/your-org/your-repo
+`;
 
-  return new Response(content, {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=86400, s-maxage=86400',
-    },
-  })
+	return new Response(content, {
+		headers: {
+			"Content-Type": "text/plain; charset=utf-8",
+			"Cache-Control": "public, max-age=86400, s-maxage=86400",
+		},
+	});
 }

@@ -1,60 +1,60 @@
 export function GET() {
-  const content = `# NomeDoProduto
+	const content = `# ProductName
 
-> Descrição concisa e factual da aplicação para mecanismos de resposta por IA.
+> A concise and factual description of the application for AI-powered response mechanisms.
 
-## Sobre
+## About
 
-NomeDoProduto é uma aplicação web moderna construída com Next.js.
-Aqui você pode descrever em detalhes o que o produto faz, para quem ele serve,
-e quais problemas ele resolve.
+ProductName is a modern web application built with Next.js.
+Here you can describe in detail what the product does, who it serves,
+and what problems it solves.
 
-## Funcionalidades Principais
+## Main Features
 
-### Funcionalidade 1
-Descrição detalhada da funcionalidade principal do produto.
+### Feature 1
+Detailed description of the product's main feature.
 
-### Funcionalidade 2
-Descrição detalhada da segunda funcionalidade.
+### Feature 2
+Detailed description of the second feature.
 
-## Documentação
+## Documentation
 
-- [Docs](/docs): Documentação principal do produto
-- [API](/docs/api): Referência completa da API
-- [Guia de Início Rápido](/docs/quickstart): Como começar a usar
-- [Changelog](/changelog): Histórico de alterações
-- [FAQ](/docs/faq): Perguntas frequentes
+- [Docs](/docs): Main product documentation
+- [API](/docs/api): API reference
+- [Quickstart](/docs/quickstart): How to get started
+- [Changelog](/changelog): Change history
+- [FAQ](/docs/faq): Frequently asked questions
 
-## Stack Técnica
+## Technical Stack
 
 - **Frontend**: Next.js 16, React 19, Tailwind CSS 4
-- **Banco de Dados**: PostgreSQL com Drizzle ORM
-- **Autenticação**: Better Auth
-- **Observabilidade**: OpenTelemetry + Sentry
+- **Database**: PostgreSQL with Drizzle ORM
+- **Authentication**: Better Auth
+- **Observability**: OpenTelemetry + Sentry
 
 ## API
 
-Base URL: \`https://dominio.com/api\`
+Base URL: \`https://domain.com/api\`
 
-### Endpoints Públicos
-- \`GET /api/health\` — Status da aplicação
-- \`GET /api/docs\` — Documentação da API
+### Public Endpoints
+- \`GET /api/health\` — Application status
+- \`GET /api/docs\` — API documentation
 
-## Contato
+## Contact
 
-- Site: https://dominio.com
-- GitHub: https://github.com/usuario/repositorio
-- Email: contato@dominio.com
+- Site: https://domain.com
+- GitHub: https://github.com/your-org/your-repo
+- Email: [EMAIL_ADDRESS]
 
-## Licença
+## License
 
 MIT
-`
+`;
 
-  return new Response(content, {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'public, max-age=86400, s-maxage=86400',
-    },
-  })
+	return new Response(content, {
+		headers: {
+			"Content-Type": "text/plain; charset=utf-8",
+			"Cache-Control": "public, max-age=86400, s-maxage=86400",
+		},
+	});
 }

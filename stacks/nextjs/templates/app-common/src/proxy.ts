@@ -1,11 +1,7 @@
-export async function setupMocks() {
-  if (process.env.NODE_ENV !== 'production') {
-    if (typeof window === 'undefined') {
-      const { server } = await import('@/mocks/server');
-      server.listen({ onUnhandledRequest: 'bypass' });
-    } else {
-      const { worker } = await import('@/mocks/browser');
-      await worker.start({ onUnhandledRequest: 'bypass' });
-    }
-  }
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export default function proxy(request: NextRequest) {
+  // Add middleware logic here if needed
+  return NextResponse.next();
 }

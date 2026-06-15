@@ -1,0 +1,9 @@
+# Ignore development and test artifacts from NPM package
+**/tests/
+**/__tests__/
+**/*.test.js
+**/*.spec.js
+
+# Also ensure we don't accidentally publish local AI agent state
+.agent/
+.agents/
