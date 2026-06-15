@@ -1,0 +1,26 @@
+{
+  "name": "fluksos",
+  "version": "1.0.0",
+  "description": "The Enterprise Stack Generator — Deterministic scaffolds for modern stacks",
+  "type": "module",
+  "bin": {
+    "fluksos": "./bin/cli.js"
+  },
+  "scripts": {
+    "start": "node ./bin/cli.js"
+  },
+  "keywords": [
+    "nextjs",
+    "nestjs",
+    "postgres",
+    "scaffold",
+    "cli",
+    "generator",
+    "enterprise",
+    "deterministic",
+    "monorepo",
+    "turborepo"
+  ],
+  "author": "",
+  "license": "MIT"
+}

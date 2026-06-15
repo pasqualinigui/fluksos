@@ -1,0 +1,16 @@
+{
+  "name": "nextjs-senior-validation-scripts",
+  "version": "1.0.0",
+  "description": "Validation scripts to enforce Next.js senior guidelines",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "validate:arch": "node validate-architecture.js",
+    "validate:ui": "node validate-ui-state.js",
+    "validate:config": "node validate-config.js",
+    "validate:all": "pnpm run validate:arch && pnpm run validate:ui && pnpm run validate:config"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.0"
+  }
+}

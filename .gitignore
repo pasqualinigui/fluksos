@@ -1,0 +1,11 @@
+# Dependências da CLI
+node_modules/
+
+# Arquivos de log e testes
+*.log
+.tmp/
+.env
+
+# Ignorar o diretório secreto dos Agentes de IA
+.agent/
+.agents/
