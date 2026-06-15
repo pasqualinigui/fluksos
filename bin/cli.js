@@ -119,42 +119,34 @@ function runScript(stackName, scriptName, scriptArgs) {
  * Prints the CLI help text with all available stacks, generators, and usage examples.
  */
 function printHelp() {
-	console.log("\x1b[1m\x1b[33mUsage:\x1b[0m\n");
+	console.log("\x1b[1m\x1b[36m🚀 USAGE\x1b[0m");
+	console.log("  $ fluksos <command> [options]\n");
 
-	console.log("  \x1b[1m\x1b[36mInitialization:\x1b[0m");
-	console.log(
-		"    fluksos init \x1b[35m<stack>\x1b[0m <project-name> <target-dir> \x1b[32m[options]\x1b[0m",
-	);
-	console.log(
-		"    \x1b[90mOptions: --tier 1|2|3, --no-install, --no-git\x1b[0m\n",
-	);
+	console.log("\x1b[1m\x1b[36m🛠️  COMMANDS\x1b[0m");
+	console.log("  \x1b[32minit\x1b[0m       Initialize a new project");
+	console.log("  \x1b[32mgenerate\x1b[0m   Generate code components (actions, rpc, etc.)");
+	console.log("  \x1b[32mvalidate\x1b[0m   Run architectural validations\n");
 
-	console.log("  \x1b[1m\x1b[36mGenerators:\x1b[0m");
-	console.log(
-		"    fluksos generate \x1b[35m<stack>\x1b[0m <type> <Name> <target-dir>\n",
-	);
-
-	console.log("  \x1b[1m\x1b[36mValidation:\x1b[0m");
-	console.log("    fluksos validate \x1b[35m<stack|all>\x1b[0m <target-dir>\n");
-
-	console.log("  \x1b[1m\x1b[33mAvailable stacks:\x1b[0m");
+	console.log("\x1b[1m\x1b[36m📚 AVAILABLE STACKS\x1b[0m");
 	for (const [name, config] of Object.entries(STACK_REGISTRY)) {
 		console.log(
-			`    \x1b[1m\x1b[32m${name.padEnd(12)}\x1b[0m \x1b[90m—\x1b[0m ${config.description}`,
+			`  \x1b[35m${name.padEnd(10)}\x1b[0m \x1b[90m—\x1b[0m ${config.description}`,
 		);
 	}
 	console.log("");
 
-	console.log("  \x1b[1m\x1b[36mTo see specific details, generators, and tiers for a stack:\x1b[0m");
-	console.log("    \x1b[32mfluksos <stack> --help\x1b[0m\n");
+	console.log("\x1b[1m\x1b[36m⚙️  INIT OPTIONS\x1b[0m");
+	console.log(
+		"  \x1b[33m--tier\x1b[0m       Architecture tier (1 = Basic, 2 = Frontend+, 3 = Full-Stack)",
+	);
+	console.log("  \x1b[33m--no-install\x1b[0m Skip dependency installation");
+	console.log("  \x1b[33m--no-git\x1b[0m     Skip Git initialization\n");
 
-	console.log("  \x1b[1m\x1b[33mExamples:\x1b[0m");
-	console.log("    \x1b[90m# Initialize a project using a specific stack\x1b[0m");
-	console.log("    fluksos init <stack> my-app ./my-app --tier 3\n");
-	console.log("    \x1b[90m# Generate code (varies per stack)\x1b[0m");
-	console.log("    fluksos generate <stack> <generator-name> <target-dir>\n");
-	console.log("    \x1b[90m# Validate a project against its stack rules\x1b[0m");
-	console.log("    fluksos validate <stack|all> ./my-project");
+	console.log("\x1b[1m\x1b[36m💡 EXAMPLES\x1b[0m");
+	console.log("  \x1b[90m# Scaffold a Full-Stack Next.js project\x1b[0m");
+	console.log("  $ fluksos init nextjs my-app ./my-app --tier 3\n");
+	console.log("  \x1b[90m# View specific stack documentation\x1b[0m");
+	console.log("  $ fluksos nextjs --help\n");
 }
 
 /**
@@ -163,12 +155,12 @@ function printHelp() {
 function printStackHelp(stackName) {
 	const config = STACK_REGISTRY[stackName];
 	console.log(
-		`\x1b[1m\x1b[36m=== ${stackName.toUpperCase()} STACK HELP ===\x1b[0m\n`,
+		`\x1b[1m\x1b[35m=== ${stackName.toUpperCase()} STACK ===\x1b[0m\n`,
 	);
-	console.log(`\x1b[1mDescription:\x1b[0m ${config.description}\n`);
+	console.log(`\x1b[1m\x1b[36m📝 DESCRIPTION\x1b[0m\n  ${config.description}\n`);
 
 	if (config.features) {
-		console.log(`\x1b[1mGlobal Features:\x1b[0m`);
+		console.log(`\x1b[1m\x1b[36m✨ FEATURES\x1b[0m`);
 		config.features.forEach((f) => {
 			console.log(`  \x1b[32m✔\x1b[0m ${f}`);
 		});
@@ -176,7 +168,7 @@ function printStackHelp(stackName) {
 	}
 
 	if (config.tiers) {
-		console.log(`\x1b[1mAvailable Tiers (--tier):\x1b[0m`);
+		console.log(`\x1b[1m\x1b[36m🏗️  TIERS (--tier)\x1b[0m`);
 		for (const [tier, desc] of Object.entries(config.tiers)) {
 			console.log(`  \x1b[1m\x1b[33mTier ${tier}\x1b[0m : ${desc}`);
 		}
@@ -184,10 +176,10 @@ function printStackHelp(stackName) {
 	}
 
 	if (config.generators) {
-		console.log(`\x1b[1mGenerators:\x1b[0m`);
+		console.log(`\x1b[1m\x1b[36m🛠️  GENERATORS\x1b[0m`);
 		for (const [name, g] of Object.entries(config.generators)) {
 			console.log(
-				`  fluksos generate ${stackName} \x1b[32m${name}\x1b[0m ${g.usage}`,
+				`  $ fluksos generate ${stackName} \x1b[32m${name}\x1b[0m ${g.usage}`,
 			);
 		}
 		console.log("");
@@ -195,7 +187,7 @@ function printStackHelp(stackName) {
 
 	if (config.validators) {
 		console.log(
-			`\x1b[1mValidators (fluksos validate ${stackName} <dir>):\x1b[0m`,
+			`\x1b[1m\x1b[36m🛡️  VALIDATORS\x1b[0m \x1b[90m(fluksos validate ${stackName} <dir>)\x1b[0m`,
 		);
 		config.validators.forEach((v) => {
 			console.log(`  \x1b[90m-\x1b[0m ${v.label}`);
