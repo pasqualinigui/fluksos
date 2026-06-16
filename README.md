@@ -256,13 +256,24 @@ Every generated project includes an observability stack:
 - **Docker Compose** — pre-configured Grafana + Prometheus + Tempo stack in `observability/`
 - **K6** — performance/load test scripts in `tests/performance/k6/`
 
-```bash
-# Start the local observability stack
-docker compose -f observability/docker-compose.observability.yml up -d
+> **Note:** To run the performance tests, you must have [K6 installed](https://k6.io/docs/get-started/installation/) on your machine.
 
-# Run smoke test
-cd tests/performance/k6 && k6 run smoke.js
-```
+### How to run the Load Tests
+To properly visualize the metrics in Grafana, you need to run the application and the test in parallel:
+
+1. **Start the Observability stack:**
+   ```bash
+   docker compose -f observability/docker-compose.observability.yml up -d
+   ```
+2. **Start your Next.js application:**
+   ```bash
+   pnpm dev
+   ```
+3. **Run the K6 test (in a new terminal):**
+   ```bash
+   cd tests/performance/k6 && k6 run smoke.js
+   ```
+Watch your Grafana dashboard (`localhost:3001`) react to the simulated load!
 
 ---
 

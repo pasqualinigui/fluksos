@@ -707,11 +707,11 @@ function printNextSteps(ctx) {
 		console.log("  pnpm --filter web db:studio");
 	}
 
-	console.log("\n# Observability (optional):");
-	console.log(
-		"  docker compose -f observability/docker-compose.observability.yml up -d",
-	);
-	console.log("  cd tests/performance/k6 && k6 run smoke.js");
+	console.log("\n# Observability & Load Testing (optional):");
+	console.log("  1. Start telemetry: docker compose -f observability/docker-compose.observability.yml up -d");
+	console.log("  2. Start the app:   pnpm dev");
+	console.log("  3. Run K6 test:     cd tests/performance/k6 && k6 run smoke.js");
+	console.log("  * Note: Requires K6 installed on your machine (https://k6.io)");
 }
 
 async function runStep(ctx, name, fn) {

@@ -32,7 +32,7 @@ const STACK_REGISTRY = {
 			"Turborepo Monorepo Architecture for scalable workspaces",
 			"Biome for ultra-fast formatting and linting",
 			"Vitest configured for unit and integration testing",
-			"Comprehensive Observability (OpenTelemetry + K6 load testing)",
+			"Comprehensive Observability (OpenTelemetry, Grafana + K6 load testing)",
 			"Lefthook enforcing pre-commit Git Hooks",
 			"Strict AST Validations for Architecture & UI State boundaries",
 			"Built-in AEO (AI Engine Optimization) & SEO rules",
