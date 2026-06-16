@@ -1,3 +1,8 @@
+---
+description: Maintainer Guide for the Next.js Stack
+audience: Open Source Contributors, Maintainers
+---
+
 # Next.js Stack Developer Guide
 
 Welcome to the `nextjs` stack implementation for the **Fluksos CLI**. 
@@ -45,7 +50,16 @@ Templates are **static files**, not code generators. What you put in `templates/
 
 ---
 
-## 🛡️ Validators and AST Rules
+## 🛠️ Modifying Generators
+
+The `generate_action.js` and `generate_rpc_hook.js` scripts are AST-blind templates. They do not parse AST to inject code; they generate new files based on string replacement.
+
+When modifying generators:
+1. Ensure the output strictly adheres to the AST rules (e.g., using `valibot` for schemas, avoiding `fetch` inside components).
+2. For Server Actions, ensure the generator wraps the action with `actionClient` so the Upstash Rate Limiter (implemented in Tier 2/3) is applied automatically.
+3. For RPC Hooks, ensure the generator uses `@tanstack/react-query` to wrap Hono, preventing direct client calls.
+
+## 🛡️ Modifying Validators and AST Rules
 
 The Next.js stack enforces strict architectural rules via independent validator scripts. These are used during the scaffolding validation phase and can be run by the user via `npx fluksos validate nextjs <dir>`.
 

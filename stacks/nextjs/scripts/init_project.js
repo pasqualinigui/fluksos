@@ -41,6 +41,8 @@ const STACK_VERSIONS = {
 	testingLibraryUserEvent: "14.6.1",
 	typesNode: "25.9.3",
 	typesPg: "8.20.0",
+	upstashRatelimit: "2.0.8",
+	upstashRedis: "1.38.0",
 };
 
 // ==========================================
@@ -394,6 +396,8 @@ async function installTierDependencies(ctx) {
 				"add",
 				`next-safe-action@${STACK_VERSIONS.nextSafeAction}`,
 				`server-only@${STACK_VERSIONS.serverOnly}`,
+				`@upstash/ratelimit@${STACK_VERSIONS.upstashRatelimit}`,
+				`@upstash/redis@${STACK_VERSIONS.upstashRedis}`,
 				"--ignore-scripts",
 			],
 			{ cwd: ctx.appDir },

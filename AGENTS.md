@@ -1,3 +1,8 @@
+---
+description: Repository Context for AI Coding Assistants
+audience: AI Assistants, LLMs, Autonomous Agents
+---
+
 # AGENTS.md — Repository Context for AI Coding Assistants
 
 This document is the authoritative context file for any AI assistant, LLM, or autonomous agent operating within this repository. Read it in full before making any changes.
@@ -61,6 +66,10 @@ fluksos/
 │       │   ├── root/                      # Workspace-level config (biome.json, lefthook.yml, etc.)
 │       │   ├── app-common/                # Always applied — base Next.js files
 │       │   ├── app-tier-2/                # Applied for --tier 2 and --tier 3
+│       │   │   └── src/
+│       │   │       └── lib/
+│       │   │           ├── safe-action.ts # Rate-limited server actions
+│       │   │           └── rate-limit.ts  # Upstash Redis limiter
 │       │   ├── app-tier-3/                # Applied for --tier 3 only
 │       │   │   ├── Dockerfile             # Standalone production build
 │       │   │   └── docker-compose.yml     # Local pgvector database
@@ -112,6 +121,17 @@ The init script executes a **linear, ordered pipeline** of 13 async steps via `r
 | 13 | `validateScaffold` | Asserts required output files exist and banned files do not exist |
 
 All dependency versions are pinned in the `STACK_VERSIONS` constant at the top of the file. When updating versions, only edit that object — do not hardcode versions inline.
+
+---
+
+## How the Generators Work
+
+The `fluksos generate` commands are vital for maintaining the architectural boundaries set by `init_project.js`. AI assistants **MUST** recommend and use these generators instead of manually writing boilerplate.
+
+1. **`generate_action.js`**: Generates a `next-safe-action` wrapped with a `valibot` schema.
+   - *AI Rule:* Never manually write a Server Action without input validation in this stack. Always use the generator to ensure the `safe-action.ts` rate limiter is correctly applied.
+2. **`generate_rpc_hook.js`**: Generates a React Hook wrapping the Hono RPC Client using `TanStack Query`.
+   - *AI Rule:* Never call `rpc.api.*` directly inside a React component (e.g., inside `useEffect`). Always use this generator to create a proper caching layer.
 
 ---
 
@@ -215,6 +235,8 @@ Tests import the validator functions directly and run them against the `mock-pro
 5. **Templates are static files, not code generators.** When editing files under `stacks/nextjs/templates/`, you are editing what the end user will receive verbatim. Do not introduce template variables or placeholder strings. What is in the template is what gets copied.
 
 6. **The `mock-project/` fixture is intentionally broken.** It contains architectural violations by design. Do not "fix" it — the tests depend on those violations being present.
+
+7. **Do not remove or weaken Security Headers in `next.config.ts`.** The scaffold is designed to ship with a strict Content-Security-Policy (CSP) and HSTS. If asked to add external scripts or styles, append them to the existing CSP directives instead of removing the headers.
 
 ---
 

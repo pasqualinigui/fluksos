@@ -35,7 +35,9 @@ export default function HomePage() {
 				{/* Call to Actions */}
 				<div className="flex flex-wrap items-center justify-center gap-4 pt-4">
 					<a
-						href="#"
+						href="https://github.com/pasqualinigui/fluksos/blob/main/README.md"
+						target="_blank"
+						rel="noreferrer"
 						className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-neutral-950 px-6 text-sm font-medium text-neutral-50 shadow transition-colors hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 dark:bg-neutral-50 dark:text-neutral-950 dark:hover:bg-neutral-200"
 					>
 						<BookOpen className="size-4" />

@@ -1,6 +1,11 @@
+---
+description: The Enterprise Scaffolding & Validation Engine
+audience: End Users, Developers, Open Source Community
+---
+
 <div align="center">
 
-<pre style="font-family: monospace; display: inline-block; text-align: left;">
+<pre style="font-family: monospace; display: inline-block; text-align: left; color: #10b981; font-weight: bold;">
 ███████╗██╗     ██╗   ██╗██╗  ██╗███████╗ ██████╗ ███████╗
 ██╔════╝██║     ██║   ██║██║ ██╔╝██╔════╝██╔═══██╗██╔════╝
 █████╗  ██║     ██║   ██║█████╔╝ ███████╗██║   ██║███████╗
@@ -9,348 +14,93 @@
 ╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚══════╝
 </pre>
 
-**The Enterprise Stack Generator**
+**The Enterprise Scaffolding & Validation Engine**
 
-*Deterministic, opinionated scaffolds for production-grade applications.*
+*Deterministic, opinionated scaffolds for production-grade applications. Zero config, 100% governance.*
 
 <br/>
 
-[![npm version](https://img.shields.io/npm/v/fluksos?style=flat-square&color=black)](https://www.npmjs.com/package/fluksos)
-[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=flat-square)](https://github.com/pasqualinigui/fluksos/blob/main/LICENSE)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D22.0.0-black?style=flat-square)](https://nodejs.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-11.5.2-black?style=flat-square)](https://pnpm.io/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-black?style=flat-square&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![npm version](https://img.shields.io/npm/v/fluksos?style=flat-square&color=cb3837&logo=npm)](https://www.npmjs.com/package/fluksos)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://github.com/pasqualinigui/fluksos/blob/main/LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D22.0.0-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-11.5.2-f69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 
 </div>
 
 ---
 
-## What is Fluksos?
+## ⚡ The Philosophy
 
-Fluksos is an **architectural CLI** — not a template, not a starter kit. It is a deterministic code generator that enforces strict boundaries, modern tooling, and production-grade defaults from day zero.
+Fluksos is not a boilerplate. It is a **Governance Engine**. 
+When senior engineers start a new project, they spend weeks configuring Turborepo, Linters, Observability, CI hooks, and Security Policies. Fluksos automates this entirely, delivering a `Top 1%` architecture in a single command.
 
-A single command produces a fully wired Turborepo monorepo with typed server actions, edge-ready APIs, observability pipelines, and automated architecture validation via AST analysis. No configuration drift. No manual wiring. No legacy defaults.
-
-The output is not a skeleton — it is a senior-level foundation ready for teams.
+- 🛡️ **Built-in AST Validation:** A custom AST parser actively bans bad code (like using `axios` or fetching directly in client components).
+- 🔒 **Zero-Day Security:** Ships out-of-the-box with strict CSP Headers, HSTS, and Upstash Rate Limiting to prevent brute-force attacks.
+- 🚀 **Performance Obsessed:** Powered by Turborepo, Biome, and Turbopack. Tests are handled by Vitest.
+- 🤖 **AEO Native:** Built-in AI Engine Optimization (`/llms.txt` and server-rendered JSON-LD) so LLMs can read your app perfectly.
 
 ---
 
-## Quick Start
+## 📦 Quick Start
 
+Initialize a brand new Enterprise application. You can either install the CLI globally or run it on-demand via `npx`.
+
+### Option A: Global Install (Recommended)
 ```bash
-# Install globally
+# 1. Install globally
 npm install -g fluksos
 
-# Or use directly with npx (no global install needed)
-npx fluksos@latest
-
-# Explore available stacks, tiers, and commands
+# 2. Explore available stacks
 fluksos --help
-fluksos nextjs --help
+
+# 3. Generate a project
+fluksos init nextjs my-app --tier 3
 ```
 
-Once you know what you want:
-
+### Option B: On-Demand (No install)
 ```bash
-# Example: scaffold a full-stack Next.js Tier 3 workspace
-fluksos init nextjs my-app ./my-app --tier 3
-cd my-app
-pnpm dev
+npx fluksos@latest
 ```
 
-> **Requires**: Node.js >= 22, pnpm >= 9 installed globally (`npm install -g pnpm`).
+*(Note: We strongly recommend running the command in an empty directory or allowing it to create `my-app` for you.)*
 
 ---
 
-## Available Stacks
+## 📚 The Technical Manual
 
-| Stack | Status | Description |
-|-------|--------|-------------|
-| `nextjs` | **Available** | Next.js 16, App Router, Turbopack, Biome, Drizzle, Better Auth, Hono Edge RPC |
-| `nestjs` | Roadmap | Fastify, Modules, Guards, Interceptors |
-| `postgres` | Roadmap | Docker Compose, pgvector, Drizzle Migrations |
+Fluksos is massive. To keep this page clean, we have segmented our deep-dive technical documentation into the `docs/` folder. Choose your path below to explore the capabilities of each stack:
 
----
+### 🚀 Next.js Stack
+*The flagship full-stack ecosystem featuring App Router, Turbopack, and Biome.*
 
-## CLI Reference
+| Documentation | Description |
+|---|---|
+| [**Architecture & Tiers**](./docs/NEXTJS_STACK.md) | Deep dive into the Architecture Tiers, Turborepo layout, AEO, Observability (Grafana/K6), and the Docker DB Workflow. |
+| [**Security & Rate Limiting**](./docs/SECURITY.md) | **Next.js specific** Zero-Day security via CSP, HSTS, Upstash Rate Limiting, and strict Better Auth defaults. |
+| [**Code Generators**](./docs/GENERATORS.md) | How to auto-generate **Next.js Server Actions** and **Hono RPC Hooks**, and the "Golden Rules" behind them. |
+| [**AST Validators**](./docs/VALIDATORS.md) | The **React/Next.js Tribunal**. Understand how our AST parser runs on `git commit` to block React-specific architectural crimes. |
 
-### `fluksos init <stack> <project-name> <target-dir> [options]`
+### 🦁 NestJS Stack (Roadmap)
+*Enterprise backend microservices powered by Fastify and Drizzle.*
+- Documentation coming soon.
 
-Scaffolds a new project from a registered stack.
-
-```bash
-fluksos init nextjs my-app ./my-app --tier 3
-fluksos init nextjs my-app ./my-app --tier 1 --no-install --no-git
-```
-
-| Option | Description |
-|--------|-------------|
-| `--tier 1\|2\|3` | Architectural tier (default: `1`) |
-| `--no-install` | Skip `pnpm install` — useful in CI or offline environments |
-| `--no-git` | Skip `git init` and Lefthook setup |
-
-### `fluksos generate <stack> <generator> <Name> <target-dir>`
-
-Generates typed, pre-wired code into an existing Fluksos project.
-
-```bash
-fluksos generate nextjs action CreateUser ./apps/web
-fluksos generate nextjs rpc useUserProfile ./apps/web
-```
-
-| Generator | Description |
-|-----------|-------------|
-| `action` | Generates a type-safe Server Action using `next-safe-action` and Valibot |
-| `rpc` | Generates a typed Hono RPC hook using `@tanstack/react-query` |
-
-### `fluksos validate <stack|all> <target-dir>`
-
-Runs all registered validators against an existing project directory.
-
-```bash
-fluksos validate nextjs ./my-app
-fluksos validate all ./my-app
-```
-
-Validators perform static analysis, AST inspection, and configuration checks. A non-zero exit code indicates violations. Designed for use in CI pipelines.
-
-### `fluksos <stack> --help`
-
-Prints tier details, available generators, and validator descriptions for a specific stack.
-
-```bash
-fluksos nextjs --help
-```
+### 🐘 PostgreSQL Stack (Roadmap)
+*Standalone database architecture and migration scaffolding.*
+- Documentation coming soon.
 
 ---
 
-## Next.js Stack — Architecture Tiers
+## 🧑‍💻 For Contributors
 
-The `nextjs` stack uses a tiered system to match project scope. Each tier is a strict superset of the previous.
+Are you an open-source contributor looking to add a new stack (e.g., NestJS) or modify the core engine? Please read the internal manuals:
 
-### Tier 1 — Frontend
-
-Pure frontend. Ideal for static sites, marketing pages, or applications that consume an external API.
-
-| Technology | Version | Role |
-|------------|---------|------|
-| Next.js | 16.x | Framework (App Router + Turbopack) |
-| React | 19.x | UI runtime |
-| TailwindCSS | v4 | Styling (CSS-native, no config file) |
-| Biome | 2.x | Formatting & linting (replaces Prettier + ESLint) |
-| TypeScript | 6.x | Type system |
-| Vitest | 4.x | Unit & integration testing |
-| OpenTelemetry | 1.x | Observability tracing |
-| Sentry | 10.x | Error monitoring |
-| Lefthook | 2.x | Pre-commit Git hooks |
-| Turborepo | 2.x | Monorepo task orchestration |
-
-### Tier 2 — State & Validation
-
-Extends Tier 1 with client-side state management and validated server actions.
-
-| Technology | Version | Role |
-|------------|---------|------|
-| Zustand | 5.x | UI state management |
-| Valibot | 1.x | Schema validation |
-| next-safe-action | 8.x | Type-safe Server Actions |
-
-### Tier 3 — Full-Stack
-
-The complete production tier. Extends Tier 2 with a full database, authentication, and typed API layer.
-
-| Technology | Version | Role |
-|------------|---------|------|
-| Drizzle ORM | 0.45.x | Type-safe ORM |
-| drizzle-kit | 0.31.x | Migration & studio tooling |
-| `pg` + `@types/pg` | 8.x | Node.js PostgreSQL client driver — required by Drizzle ORM to connect to a Postgres instance |
-| Better Auth | 1.6.x | Authentication (email verification enforced) |
-| TanStack Query | 5.x | Async state & caching for client components |
-| Hono Edge RPC | (via proxy.ts) | Type-safe edge API layer |
+- [**AGENTS.md**](./AGENTS.md): The core mapping of the CLI dispatcher and rules for AI Assistants.
+- [**Next.js Maintainer Guide**](./stacks/nextjs/README.md): The internal pipeline of `init_project.js` and how the templates are wired.
 
 ---
 
-## What Gets Generated
-
-### Workspace Layout
-
-```
-my-app/
-├── apps/
-│   └── web/                   # Next.js application
-│       ├── src/
-│       │   ├── app/           # App Router (RSC-first)
-│       │   │   ├── globals.css
-│       │   │   ├── layout.tsx
-│       │   │   ├── page.tsx
-│       │   │   ├── robots.ts          # Dynamic robots (env-aware)
-│       │   │   ├── sitemap.ts         # Dynamic sitemap (db-driven)
-│       │   │   ├── llms.txt/          # AEO — LLM discovery endpoint
-│       │   │   └── llms-full.txt/     # AEO — Full content bundle
-│       │   ├── components/
-│       │   │   └── seo/
-│       │   │       └── json-ld.tsx    # Structured data (Server Component)
-│       │   ├── config/
-│       │   │   └── env.ts             # Type-safe environment variables
-│       │   ├── lib/
-│       │   │   ├── utils.ts
-│       │   │   ├── safe-action.ts     # (Tier 2+)
-│       │   │   ├── fetcher.server.ts  # (Tier 2+)
-│       │   │   └── auth.ts            # (Tier 3)
-│       │   ├── db/
-│       │   │   └── index.ts           # (Tier 3) Drizzle client
-│       │   └── proxy.ts               # Edge routing (replaces middleware.ts)
-│       ├── public/
-│       │   └── mirrors/home.md        # AEO — Markdown mirror of homepage
-│       ├── next.config.ts
-│       ├── tsconfig.json
-│       ├── vitest.config.ts
-│       ├── components.json            # Shadcn UI registry config
-│       ├── drizzle.config.ts          # (Tier 3)
-│       ├── Dockerfile                 # (Tier 3) Standalone production build
-│       ├── docker-compose.yml         # (Tier 3) Local database
-│       └── postcss.config.mjs
-├── observability/                     # OpenTelemetry + Grafana stack
-├── tests/
-│   └── performance/k6/                # K6 load testing scripts
-├── biome.json                         # Workspace-level Biome config
-├── lefthook.yml                       # Pre-commit hook definitions
-├── turbo.json
-└── pnpm-workspace.yaml
-```
-
-### Built-in Constraints
-
-Fluksos enforces architectural rules at generation time and continuously via `fluksos validate`. Violations exit with a non-zero code and include the rule name, file, and remediation message.
-
-**Architecture rules enforced:**
-
-- `page.tsx` files must be React Server Components — `"use client"` is forbidden
-- `src/services/`, `src/actions/`, and `src/db/` must import `server-only`
-- `middleware.ts` is banned — use `proxy.ts` for edge routing (Next.js 16.2+)
-- `tailwind.config.ts` is banned — TailwindCSS v4 is configured via `globals.css`
-- `postcss.config.js` must be an ES module (`.mjs`)
-- Static `robots.txt` and `sitemap.xml` are banned — use the dynamic App Router equivalents
-- `sitemap.ts` must reference real `updatedAt` timestamps — `new Date()` is banned
-- `unstable_cache` and `fetch({ cache: "force-cache" })` are banned — use `"use cache"` directive
-- Global state must use Zustand — React Context, Redux are banned
-- HTTP clients must use `fetcher.ts` or Hono RPC — Axios is banned
-- Client Components must not access `db` directly
-- `useEffect` data fetching must use TanStack Query — raw `fetch()` in effects is banned
-- Zustand stores must not contain remote data logic
-- Better Auth must have `requireEmailVerification: true`
-- All `<img>` / `<Image>` elements must have meaningful `alt` text
-- JSON-LD structured data must be in Server Components, never Client Components
-- Primitive UI components (Button, Input, Card) must use Shadcn UI
-- Marketing `page.tsx` files must have a co-located `opengraph-image.(png|jpg|tsx)`
-- `// @ts-ignore` is globally banned
-
----
-
-## Observability
-
-Every generated project includes an observability stack:
-
-- **OpenTelemetry** (`@vercel/otel`) — instrumented in `next.config.ts`
-- **Sentry** (`@sentry/nextjs`) — error monitoring with source maps
-- **Docker Compose** — pre-configured Grafana + Prometheus + Tempo stack in `observability/`
-- **K6** — performance/load test scripts in `tests/performance/k6/`
-
-> **Note:** To run the performance tests, you must have [K6 installed](https://k6.io/docs/get-started/installation/) on your machine.
-
-### How to run the Load Tests
-To properly visualize the metrics in Grafana, you need to run the application and the test in parallel:
-
-1. **Start the Observability stack:**
-   ```bash
-   docker compose -f observability/docker-compose.observability.yml up -d
-   ```
-2. **Start your Next.js application:**
-   ```bash
-   pnpm dev
-   ```
-3. **Run the K6 test (in a new terminal):**
-   ```bash
-   cd tests/performance/k6 && k6 run smoke.js
-   ```
-Watch your Grafana dashboard (`localhost:3001`) react to the simulated load!
-
----
-
-## AEO — AI Engine Optimization
-
-Fluksos ships with first-class AEO support, making generated applications discoverable by LLMs and AI crawlers:
-
-- **`/llms.txt`** — A structured, machine-readable product summary served as a dynamic route
-- **`/llms-full.txt`** — A full content bundle for GitHub Copilot and Anthropic API ingestion
-- **`/mirrors/home.md`** — A Markdown mirror of the homepage for AI-parseable content
-- **JSON-LD** — Structured data components rendered server-side only
-- **Dynamic sitemap** — Enforced via validator to use real database timestamps
-
----
-
-## Database Workflow (Tier 3)
-
-The generated Tier 3 application ships with a pre-configured `docker-compose.yml` optimized for local development using the most senior industry standards (`pgvector/pgvector:0.8.2-pg18-trixie`).
-
-```bash
-# Start the local database (PostgreSQL 18 + pgvector)
-docker compose up -d
-
-# Generate migration files from schema changes
-pnpm --filter web db:generate
-
-# Apply migrations
-pnpm --filter web db:migrate
-
-# Open Drizzle Studio
-pnpm --filter web db:studio
-```
-
----
-
-## Workspace Scripts
-
-```bash
-pnpm dev          # turbo run dev (all apps)
-pnpm build        # turbo run build
-pnpm typecheck    # turbo run typecheck (strict, --noEmit)
-pnpm test         # turbo run test (Vitest)
-pnpm coverage     # turbo run coverage
-pnpm lint         # biome check .
-pnpm lint:fix     # biome check --write .
-pnpm format       # biome format --write .
-```
-
----
-
-## Deployment
-
-Fluksos scaffolds are deeply engineered to support both Serverless and Containerized environments out of the box with zero configuration drift.
-
-### Option 1: Vercel (Serverless)
-Push your repository and import it into Vercel. Next.js handles the `standalone` configuration transparently and deploys the App Router natively at the Edge/Serverless layers.
-
-### Option 2: Docker (Containerized)
-For enterprise deployments (AWS ECS, Kubernetes, Coolify), Tier 3 generates a highly optimized, multi-stage `Dockerfile`.
-- Uses `node:22-alpine` for minimal footprint.
-- Runs as a secure, non-root `nextjs` user.
-- Extracts purely the `standalone` build output.
-
-```bash
-docker build -t my-app .
-docker run -p 3000:3000 my-app
-```
-> **Note:** The `Dockerfile` only packages the Next.js application. Your production database should be hosted on a managed service (e.g., Supabase, Neon, AWS RDS) or a dedicated database instance.
-
----
-
-## Contributing
-
-Fluksos uses AI-assisted development workflows. If you are contributing, or working with an AI coding assistant in this repository, read [AGENTS.md](./AGENTS.md) first. It documents the repository architecture, constraints, and the Slash Command system that governs all structural changes.
-
----
-
-## License
-
-MIT — see [LICENSE](./LICENSE).
+<div align="center">
+  Built with obsession for clean architecture. <br/>
+  <a href="https://github.com/pasqualinigui">Follow the Creator</a>
+</div>

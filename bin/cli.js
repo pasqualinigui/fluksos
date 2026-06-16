@@ -4,10 +4,18 @@ import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import updateNotifier from "update-notifier";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const STACKS_DIR = path.resolve(__dirname, "..", "stacks");
+const packageJsonPath = path.resolve(__dirname, "..", "package.json");
+
+// Parse package.json for the update notifier
+const pkg = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
+
+// Fire-and-forget update check
+updateNotifier({ pkg, updateCheckInterval: 0 }).notify();
 
 const ASCII_LOGO = `
 ███████╗██╗     ██╗   ██╗██╗  ██╗███████╗ ██████╗ ███████╗
@@ -33,6 +41,8 @@ const STACK_REGISTRY = {
 			"Biome for ultra-fast formatting and linting",
 			"Vitest configured for unit and integration testing",
 			"Comprehensive Observability (OpenTelemetry, Grafana + K6 load testing)",
+			"Built-in Upstash Rate Limiting (Redis) for Tier 2 and 3",
+			"Strict Security Headers (CSP, HSTS) out-of-the-box",
 			"Lefthook enforcing pre-commit Git Hooks",
 			"Strict AST Validations for Architecture & UI State boundaries",
 			"Built-in AEO (AI Engine Optimization) & SEO rules",
@@ -121,35 +131,27 @@ function runScript(stackName, scriptName, scriptArgs) {
  */
 function printHelp() {
 	console.log("\x1b[1m\x1b[36m🚀 USAGE\x1b[0m");
-	console.log("  $ fluksos <command> [options]\n");
-
-	console.log("\x1b[1m\x1b[36m🛠️  COMMANDS\x1b[0m");
-	console.log("  \x1b[32minit\x1b[0m       Initialize a new project");
-	console.log("  \x1b[32mgenerate\x1b[0m   Generate code components (actions, rpc, etc.)");
-	console.log("  \x1b[32mvalidate\x1b[0m   Run architectural validations\n");
+	console.log("  $ fluksos <command> [stack] [options]\n");
 
 	console.log("\x1b[1m\x1b[36m📚 AVAILABLE STACKS\x1b[0m");
-	for (const [name, config] of Object.entries(STACK_REGISTRY)) {
+	for (const [name] of Object.entries(STACK_REGISTRY)) {
 		console.log(
-			`  \x1b[35m${name.padEnd(10)}\x1b[0m \x1b[90m—\x1b[0m ${config.description}`,
+			`  \x1b[1m\x1b[32m${name.padEnd(10)}\x1b[0m \x1b[90m— (Available)\x1b[0m`,
 		);
 	}
+	console.log(`  \x1b[90m${"nestjs".padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m`);
+	console.log(`  \x1b[90m${"postgres".padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m`);
 	console.log("");
 
-	console.log("\x1b[1m\x1b[36m⚙️  INIT OPTIONS\x1b[0m");
-	console.log(
-		"  \x1b[33m--tier\x1b[0m       Architecture tier (1 = Basic, 2 = Frontend+, 3 = Full-Stack)",
-	);
-	console.log("  \x1b[33m--no-install\x1b[0m Skip dependency installation");
-	console.log("  \x1b[33m--no-git\x1b[0m     Skip Git initialization\n");
+	console.log("\x1b[1m\x1b[36m💡 HOW TO EXPLORE\x1b[0m");
+	console.log("  To see specific details, architecture tiers, and generators for a stack, run:");
+	console.log("  $ fluksos \x1b[32m<stack>\x1b[0m --help\n");
 
-	console.log("\x1b[1m\x1b[36m💡 EXAMPLES\x1b[0m");
-	console.log("  \x1b[90m# Scaffold a Full-Stack Next.js project\x1b[0m");
+	console.log("\x1b[1m\x1b[36m📋 EXAMPLES\x1b[0m");
+	console.log("  \x1b[90m# Scaffold a new project in a specific folder\x1b[0m");
 	console.log("  $ fluksos init nextjs my-app --tier 3\n");
-	console.log("  \x1b[90m# Initialize in the current directory\x1b[0m");
-	console.log("  $ fluksos init nextjs . --tier 3\n");
-	console.log("  \x1b[90m# View specific stack documentation\x1b[0m");
-	console.log("  $ fluksos nextjs --help\n");
+	console.log("  \x1b[90m# Scaffold in the current directory (.)\x1b[0m");
+	console.log("  $ fluksos init nextjs . --tier 2\n");
 }
 
 /**
@@ -158,52 +160,50 @@ function printHelp() {
 function printStackHelp(stackName) {
 	const config = STACK_REGISTRY[stackName];
 	console.log(
-		`\x1b[1m\x1b[35m=== ${stackName.toUpperCase()} STACK ===\x1b[0m\n`,
+		`\x1b[1m\x1b[32m=== ${stackName.toUpperCase()} STACK ===\x1b[0m\n`,
 	);
 	console.log(`\x1b[1m\x1b[36m📝 DESCRIPTION\x1b[0m\n  ${config.description}\n`);
 
+	if (config.tiers) {
+		console.log(`\x1b[1m\x1b[36m🏗️  ARCHITECTURE TIERS (--tier)\x1b[0m`);
+		for (const [tier, desc] of Object.entries(config.tiers)) {
+			const [title, ...rest] = desc.split('. ');
+			console.log(`  \x1b[1m\x1b[33m[${tier}] ${title}\x1b[0m`);
+			if (rest.length > 0) {
+				console.log(`      \x1b[90m${rest.join('. ')}\x1b[0m`);
+			}
+		}
+		console.log("");
+	}
+
 	if (config.features) {
-		console.log(`\x1b[1m\x1b[36m✨ FEATURES\x1b[0m`);
+		console.log(`\x1b[1m\x1b[36m✨ ENTERPRISE FEATURES\x1b[0m`);
 		config.features.forEach((f) => {
 			console.log(`  \x1b[32m✔\x1b[0m ${f}`);
 		});
 		console.log("");
 	}
 
-	if (config.tiers) {
-		console.log(`\x1b[1m\x1b[36m🏗️  TIERS (--tier)\x1b[0m`);
-		for (const [tier, desc] of Object.entries(config.tiers)) {
-			console.log(`  \x1b[1m\x1b[33mTier ${tier}\x1b[0m : ${desc}`);
-		}
-		console.log("");
-	}
-
+	console.log(`\x1b[1m\x1b[36m🛠️  AVAILABLE COMMANDS\x1b[0m`);
+	console.log(`  \x1b[32minit\x1b[0m      $ fluksos init ${stackName} <dir> --tier <n>`);
+	
 	if (config.generators) {
-		console.log(`\x1b[1m\x1b[36m🛠️  GENERATORS\x1b[0m`);
 		for (const [name, g] of Object.entries(config.generators)) {
-			console.log(
-				`  $ fluksos generate ${stackName} \x1b[32m${name}\x1b[0m ${g.usage}`,
-			);
+			console.log(`  \x1b[32mgenerate\x1b[0m  $ fluksos generate ${stackName} ${name} ${g.usage}`);
 		}
-		console.log("");
 	}
-
+	
 	if (config.validators) {
-		console.log(
-			`\x1b[1m\x1b[36m🛡️  VALIDATORS\x1b[0m \x1b[90m(fluksos validate ${stackName} <dir>)\x1b[0m`,
-		);
-		config.validators.forEach((v) => {
-			console.log(`  \x1b[90m-\x1b[0m ${v.label}`);
-		});
-		console.log("");
+		console.log(`  \x1b[32mvalidate\x1b[0m  $ fluksos validate ${stackName} <dir>`);
 	}
+	console.log("");
 }
 
 // ==========================================
 // Main
 // ==========================================
-console.log("\x1b[1m\x1b[36m%s\x1b[0m", ASCII_LOGO);
-console.log("\x1b[1m\x1b[32mThe Enterprise Stack Generator\x1b[0m\n");
+console.log("\x1b[1m\x1b[32m%s\x1b[0m", ASCII_LOGO);
+console.log("\x1b[1m\x1b[32mThe Enterprise Scaffolding & Validation Engine\x1b[0m\n");
 
 const args = process.argv.slice(2);
 

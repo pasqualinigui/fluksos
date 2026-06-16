@@ -1,6 +1,6 @@
 {
   "name": "fluksos",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "The Enterprise Stack Generator — Deterministic scaffolds for modern stacks",
   "type": "module",
   "bin": {
@@ -25,6 +25,9 @@
     "monorepo",
     "turborepo"
   ],
-  "author": "",
-  "license": "MIT"
+  "author": "Guilherme Pasqualini",
+  "license": "MIT",
+  "dependencies": {
+    "update-notifier": "^7.3.1"
+  }
 }

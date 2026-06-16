@@ -5,6 +5,8 @@ const EnvSchema = v.object({
 	BETTER_AUTH_SECRET: v.pipe(v.string(), v.minLength(32)),
 	NEXT_PUBLIC_APP_URL: v.pipe(v.string(), v.url()),
 	NODE_ENV: v.picklist(["development", "test", "production"]),
+	UPSTASH_REDIS_REST_URL: v.optional(v.pipe(v.string(), v.url())),
+	UPSTASH_REDIS_REST_TOKEN: v.optional(v.string()),
 });
 
 const parsed = v.safeParse(EnvSchema, process.env);
