@@ -36,11 +36,12 @@ const STACK_REGISTRY = {
 			"Lefthook enforcing pre-commit Git Hooks",
 			"Strict AST Validations for Architecture & UI State boundaries",
 			"Built-in AEO (AI Engine Optimization) & SEO rules",
+			"Docker-ready with standalone Next.js and pgvector PostgreSQL",
 		],
 		tiers: {
 			1: "Frontend only. React 19, TailwindCSS v4, Next.js App Router",
 			2: "Frontend + State & Validation. Includes Zustand and Valibot",
-			3: "Full-stack. Includes Tier 2 + Hono Edge RPC, Drizzle ORM, and Better Auth",
+			3: "Full-stack. Includes Tier 2 + Hono Edge RPC, Drizzle ORM, Docker DB (pgvector), and Better Auth",
 		},
 		init: "init_project.js",
 		generators: {

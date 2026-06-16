@@ -701,6 +701,7 @@ function printNextSteps(ctx) {
 
 	if (ctx.tier === 3) {
 		console.log("\n# Database (Tier 3):");
+		console.log("  docker compose -f apps/web/docker-compose.yml up -d");
 		console.log("  pnpm --filter web db:generate");
 		console.log("  pnpm --filter web db:migrate");
 		console.log("  pnpm --filter web db:studio");
