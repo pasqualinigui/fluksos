@@ -62,6 +62,8 @@ fluksos/
 │       │   ├── app-common/                # Always applied — base Next.js files
 │       │   ├── app-tier-2/                # Applied for --tier 2 and --tier 3
 │       │   ├── app-tier-3/                # Applied for --tier 3 only
+│       │   │   ├── Dockerfile             # Standalone production build
+│       │   │   └── docker-compose.yml     # Local pgvector database
 │       │   ├── observability/             # Docker Compose, OTel, Grafana config
 │       │   └── tests/                     # K6 performance test scripts
 │       ├── tests/

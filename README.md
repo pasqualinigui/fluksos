@@ -207,6 +207,8 @@ my-app/
 │       ├── vitest.config.ts
 │       ├── components.json            # Shadcn UI registry config
 │       ├── drizzle.config.ts          # (Tier 3)
+│       ├── Dockerfile                 # (Tier 3) Standalone production build
+│       ├── docker-compose.yml         # (Tier 3) Local database
 │       └── postcss.config.mjs
 ├── observability/                     # OpenTelemetry + Grafana stack
 ├── tests/
@@ -278,7 +280,12 @@ Fluksos ships with first-class AEO support, making generated applications discov
 
 ## Database Workflow (Tier 3)
 
+The generated Tier 3 application ships with a pre-configured `docker-compose.yml` optimized for local development using the most senior industry standards (`pgvector/pgvector:0.8.2-pg18-trixie`).
+
 ```bash
+# Start the local database (PostgreSQL 18 + pgvector)
+docker compose up -d
+
 # Generate migration files from schema changes
 pnpm --filter web db:generate
 
@@ -303,6 +310,27 @@ pnpm lint         # biome check .
 pnpm lint:fix     # biome check --write .
 pnpm format       # biome format --write .
 ```
+
+---
+
+## Deployment
+
+Fluksos scaffolds are deeply engineered to support both Serverless and Containerized environments out of the box with zero configuration drift.
+
+### Option 1: Vercel (Serverless)
+Push your repository and import it into Vercel. Next.js handles the `standalone` configuration transparently and deploys the App Router natively at the Edge/Serverless layers.
+
+### Option 2: Docker (Containerized)
+For enterprise deployments (AWS ECS, Kubernetes, Coolify), Tier 3 generates a highly optimized, multi-stage `Dockerfile`.
+- Uses `node:22-alpine` for minimal footprint.
+- Runs as a secure, non-root `nextjs` user.
+- Extracts purely the `standalone` build output.
+
+```bash
+docker build -t my-app .
+docker run -p 3000:3000 my-app
+```
+> **Note:** The `Dockerfile` only packages the Next.js application. Your production database should be hosted on a managed service (e.g., Supabase, Neon, AWS RDS) or a dedicated database instance.
 
 ---
 
