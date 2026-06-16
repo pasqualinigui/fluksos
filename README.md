@@ -23,8 +23,8 @@ audience: End Users, Developers, Open Source Community
 [![npm version](https://img.shields.io/npm/v/fluksos?style=flat-square&color=cb3837&logo=npm)](https://www.npmjs.com/package/fluksos)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://github.com/pasqualinigui/fluksos/blob/main/LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D22.0.0-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-11.5.2-f69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-11.6.0-f69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
 </div>
 
