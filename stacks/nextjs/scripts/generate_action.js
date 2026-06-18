@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from 'node:fs'
+import path from 'node:path'
 
-const [, , actionName, targetDir] = process.argv;
+const [, , actionName, targetDir] = process.argv
 
 if (!actionName || !targetDir) {
   console.error(
-    '\x1b[31m[ERROR]\x1b[0m Usage: node generate_action.js <actionName> <target-directory>'
-  );
-  process.exit(1);
+    '\x1b[31m[ERROR]\x1b[0m Usage: node generate_action.js <actionName> <target-directory>',
+  )
+  process.exit(1)
 }
 
-const fileName = `${actionName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`).replace(/^-/, '')}.action.ts`;
-const absoluteTargetDir = path.resolve(targetDir);
-const filePath = path.join(absoluteTargetDir, fileName);
+const fileName = `${actionName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`).replace(/^-/, '')}.action.ts`
+const absoluteTargetDir = path.resolve(targetDir)
+const filePath = path.join(absoluteTargetDir, fileName)
 
 const content = `"use server";
 import { actionClient } from "@/lib/safe-action";
@@ -35,13 +35,13 @@ export const ${actionName}Action = actionClient
     
     return { success: true, message: \`Action executed successfully for ID: \${id}\` };
   });
-`;
+`
 
 if (!fs.existsSync(absoluteTargetDir)) {
-  fs.mkdirSync(absoluteTargetDir, { recursive: true });
+  fs.mkdirSync(absoluteTargetDir, { recursive: true })
 }
 
-fs.writeFileSync(filePath, content);
+fs.writeFileSync(filePath, content)
 console.log(
-  `\x1b[32m[SUCCESS]\x1b[0m Server Action '${actionName}Action' generated successfully at: ${filePath}`
-);
+  `\x1b[32m[SUCCESS]\x1b[0m Server Action '${actionName}Action' generated successfully at: ${filePath}`,
+)

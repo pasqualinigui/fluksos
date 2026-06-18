@@ -26,10 +26,12 @@ If it finds a violation, the `report-generator.js` kicks in, prints a beautiful 
 
 ## 2. CI/CD & Lefthook Integration
 
-Fluksos automatically installs and configures `lefthook` (a fast Git hooks manager). 
+Fluksos automatically installs and configures `lefthook` (a fast Git hooks manager) and a **GitHub Actions CI/CD pipeline** (`.github/workflows/ci.yml`).
 
-Every time a developer types `git commit`, Lefthook automatically runs `fluksos validate nextjs .`.
-If an architectural boundary is broken, the commit is **blocked locally**. Bad code never even reaches GitHub, saving hundreds of hours in code reviews.
+- **Locally (Pre-commit):** Every time a developer types `git commit`, Lefthook automatically runs `fluksos validate nextjs .` and `biome check`. If an architectural boundary is broken, the commit is **blocked locally**.
+- **Remotely (Pull Requests):** When code is pushed, the GitHub Actions pipeline runs a deterministic install, strict typechecking, Biome validation, and the Fluksos AST Validator on the cloud.
+
+Bad code never even reaches the main branch, saving hundreds of hours in code reviews.
 
 ---
 
@@ -38,6 +40,8 @@ If an architectural boundary is broken, the commit is **blocked locally**. Bad c
 Here is a subset of the architectural rules enforced strictly by Fluksos. These rules define the "Senior-level" standards of the stack.
 
 ### FATAL Violations (Blocks Commits)
+- **`banned-md5`**: `MD5` is structurally banned. PostgreSQL 18 and Senior codebases demand SCRAM-SHA-256 or similar secure hashing.
+- **`db-in-controller`**: Direct `db` access inside controllers/pages is banned to enforce Read/Write explicit routing via Repositories.
 - **`banned-axios`**: `axios` is banned. Use the native `fetch` API or the Hono RPC client.
 - **`banned-redux` / `banned-react-context`**: Redux and React Context are banned for global state. Use Zustand.
 - **`banned-pages-router`**: The old `src/pages/` directory is banned. Only the App Router (`src/app/`) is allowed.
@@ -50,6 +54,7 @@ Here is a subset of the architectural rules enforced strictly by Fluksos. These 
 - **`css-import-url`**: Performance rule. Using `@import url()` in your CSS blocks parallel downloads. You must use `next/font`.
 
 ### ERROR Violations (Warnings)
+- **`legacy-uuid`**: Generates a warning if `uuidv4()` is used instead of PostgreSQL 18's native `uuidv7()` for internal primary keys.
 - **`business-logic-in-page`**: Route handlers and mutations inside `page.tsx` are discouraged. Keep pages focused on layout and data fetching, offload mutations to Server Actions.
 - **`missing-opengraph-image`**: Marketing pages (`page.tsx`) should ideally have a co-located `opengraph-image.*` for rich social sharing.
 

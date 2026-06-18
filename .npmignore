@@ -7,3 +7,10 @@
 # Also ensure we don't accidentally publish local AI agent state
 .agent/
 .agents/
+AGENTS.md
+
+# Ignore community and dev ops files
+.changeset/
+.github/
+docs/
+lefthook.yml

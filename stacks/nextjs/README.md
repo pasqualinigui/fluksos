@@ -41,7 +41,7 @@ Templates are **static files**, not code generators. What you put in `templates/
 
 | Directory | Purpose |
 |-----------|---------|
-| `root/` | Workspace-level tools (`biome.json`, `lefthook.yml`). |
+| `root/` | Workspace-level tools (`biome.json`, `lefthook.yml`) and Enterprise CI/CD pipelines (`.github/workflows/ci.yml`). |
 | `app-common/` | Base Next.js files applied to **all** tiers. Includes `globals.css`, `next.config.ts`, `tsconfig.json`, `components.json`, and basic AEO routing (`llms.txt`, `robots.ts`, `sitemap.ts`, `public/mirrors/home.md`). |
 | `app-tier-2/` | Applied if Tier >= 2. Overlays `lib/safe-action.ts` and `lib/fetcher.server.ts`. |
 | `app-tier-3/` | Applied if Tier === 3. Overlays `db/index.ts`, `drizzle.config.ts`, `lib/auth.ts`, and the Better Auth API route. |
@@ -72,7 +72,9 @@ This is the core engine ensuring the framework is used correctly.
 - **Marketing Graph**: Requires an `opengraph-image` alongside any public marketing `page.tsx`.
 - **AST Parsing Rules**:
   - `page.tsx` must be a React Server Component (no `'use client'`).
-  - No direct `db` imports in `page.tsx` or Client Components.
+  - No direct `db` imports in `page.tsx` or Client Components (enforced via `db-in-controller`).
+  - `MD5` is fully banned (`banned-md5`).
+  - Warning on `uuidv4()` if `uuidv7()` should be used (`legacy-uuid`).
   - Server actions, `db`, and services must include `import 'server-only'`.
   - Global state must use Zustand (React `createContext` and Redux are banned).
   - Client data fetching must use TanStack Query (no raw `fetch()` or `axios()` inside `useEffect`).

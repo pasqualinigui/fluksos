@@ -7,7 +7,13 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/dist/", "!**/.next/", "!**/node_modules/", "!**/*.generated.ts"]
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/dist",
+      "!stacks/*/templates",
+      "!stacks/*/tests/mock-project*"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -19,7 +25,7 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "correctness": {
         "noUnusedVariables": "error",
         "noUnusedImports": "error"

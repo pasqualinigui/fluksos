@@ -1,6 +1,6 @@
 services:
   db:
-    # Usando pgvector por padrão: preparado para IA (RAG) sem custo adicional
+    # Using pgvector by default: AI-ready (RAG) at no extra cost
     image: pgvector/pgvector:0.8.2-pg18-trixie
     container_name: nextjs-postgres
     restart: always
