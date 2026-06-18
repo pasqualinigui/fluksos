@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const STACK_VERSIONS = {
-  packageManager: 'pnpm@11.6.0',
+  packageManager: 'pnpm@11.7.0',
   next: '16.2.9',
   react: '19.2.7',
   reactDom: '19.2.7',

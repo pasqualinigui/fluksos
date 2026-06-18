@@ -131,7 +131,6 @@ function printHelp() {
   console.log('\x1b[1m\x1b[36m🚀 USAGE\x1b[0m')
   console.log('  $ fluksos <command> [stack] [options]\n')
 
-  console.log('\x1b[1m\x1b[35m🐘 PG18 SENIOR GOVERNANCE ACTIVE\x1b[0m\n')
   console.log('\x1b[1m\x1b[36m📚 AVAILABLE STACKS\x1b[0m')
   for (const [name] of Object.entries(STACK_REGISTRY)) {
     console.log(`  \x1b[1m\x1b[32m${name.padEnd(10)}\x1b[0m \x1b[90m— (Available)\x1b[0m`)
@@ -199,7 +198,6 @@ function printStackHelp(stackName) {
 // ==========================================
 console.log('\x1b[1m\x1b[32m%s\x1b[0m', ASCII_LOGO)
 console.log('\x1b[1m\x1b[32mThe Enterprise Scaffolding & Validation Engine 🛡️ \x1b[0m')
-console.log('\x1b[1m\x1b[35m[PG18 SENIOR EDITION] Strict Governance Mode Active\x1b[0m\n')
 
 const args = process.argv.slice(2)
 
