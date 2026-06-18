@@ -63,7 +63,7 @@ fluksos/
 │       │       ├── ast-parser.js          # Core AST rule engine
 │       │       └── report-generator.js    # Violation report formatter
 │       ├── templates/
-│       │   ├── root/                      # Workspace-level config (biome.json, lefthook.yml, etc.)
+│       │   ├── root/                      # Workspace-level config (biome.json, lefthook.yml, .github/workflows)
 │       │   ├── app-common/                # Always applied — base Next.js files
 │       │   ├── app-tier-2/                # Applied for --tier 2 and --tier 3
 │       │   │   └── src/
@@ -170,6 +170,8 @@ Rules enforced by `ast-parser.js` on every `.ts`, `.tsx`, `.js`, and `.css` file
 | `banned-ts-ignore` | FATAL | `// @ts-ignore` is globally banned |
 | `banned-react-context` | FATAL | `createContext` from React is banned — use Zustand |
 | `banned-redux` | FATAL | `react-redux` and `@reduxjs/toolkit` are banned |
+| `banned-md5` | FATAL | `MD5` is banned — use SCRAM-SHA-256 or secure hashing |
+| `db-in-controller` | FATAL | Controllers/Pages must not import `db` directly — use Repositories |
 | `banned-axios` | FATAL | `axios` is banned — use `fetcher.ts` or Hono RPC |
 | `use-client-in-page` | FATAL | `page.tsx` must be a React Server Component |
 | `business-logic-in-page` | ERROR | Route handler mutations in `page.tsx` must use Server Actions |
@@ -184,6 +186,7 @@ Rules enforced by `ast-parser.js` on every `.ts`, `.tsx`, `.js`, and `.css` file
 | `css-import-url` | FATAL | `@import url()` in `globals.css` is banned — use `next/font` |
 | `missing-alt-text` | FATAL | `<img>` and `<Image>` must have meaningful `alt` text |
 | `banned-custom-primitive-ui` | FATAL | Do not build Button/Input/Card/Modal/Dialog primitives — use Shadcn UI |
+| `legacy-uuid` | WARNING | `uuidv4()` used where `uuidv7()` is expected for PKs |
 
 **File-level rules (in `validate-architecture.js`):**
 
@@ -267,3 +270,14 @@ Speed and zero dependencies. The validator runs on pre-commit hooks where latenc
 
 **Why are all dependency versions pinned?**  
 Determinism. Two engineers running `npx fluksos@latest init` on different dates must get identical lockfiles. Version ranges defeat this guarantee.
+
+---
+
+## Internal Governance & CD (Dogfooding)
+
+Fluksos uses **Biome**, **Lefthook**, and **GitHub Actions** to enforce its own source code quality, and **Changesets** for Semantic Versioning and Continuous Deployment. As an AI assistant, you must respect these boundaries:
+
+1. The `biome.json` at the repository root strictly ignores `stacks/*/templates/**` and `stacks/*/tests/mock-project/**`. **Do not attempt to format templates**. Templates are the literal string output sent to the user and may contain intentional intermediate states.
+2. If you modify `bin/` or `stacks/*/scripts/`, your code will be checked by Biome on `pre-commit` hooks via Lefthook. Ensure your generated code is clean and follows A.N.T (Aesthetics, Naming, Types) aesthetics.
+3. The Vitest architecture tests run on `pre-push` and in the CI pipeline. Never bypass the CI validation.
+4. **Publishing**: Fluksos uses a CI/CD pipeline with NPM Provenance. If you are instructed to bump a version or release a feature, you MUST use `pnpm exec changeset` to generate a changelog file. Do not manually edit the `version` field in `package.json`. The GitHub Action `.github/workflows/publish.yml` handles the actual publication to NPM when the "Version Packages" PR is merged.

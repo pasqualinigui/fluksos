@@ -1,0 +1,50 @@
+name: Publish Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  publish:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required for creating releases and pushing tags
+      pull-requests: write # Required for changesets to create the Version PR
+      id-token: write # Required for NPM Provenance (EIP-0001)
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to fetch tags and history
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create Release Pull Request or Publish to NPM
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          # This command creates the changelog and bumps version, then commits.
+          # The action will open a "Version Packages" PR.
+          # When you merge that PR, this workflow runs again, detects no unreleased changes,
+          # and executes the publish command instead.
+          publish: pnpm publish --no-git-checks --access public --provenance
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

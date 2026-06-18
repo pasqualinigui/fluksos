@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from 'node:fs'
+import path from 'node:path'
 
-const [, , hookName, targetDir] = process.argv;
+const [, , hookName, targetDir] = process.argv
 
 if (!hookName || !targetDir) {
   console.error(
-    '\x1b[31m[ERROR]\x1b[0m Usage: node generate_rpc_hook.js <EntityName> <target-directory>'
-  );
-  process.exit(1);
+    '\x1b[31m[ERROR]\x1b[0m Usage: node generate_rpc_hook.js <EntityName> <target-directory>',
+  )
+  process.exit(1)
 }
 
-const fileName = `use-${hookName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`).replace(/^-/, '')}.ts`;
-const absoluteTargetDir = path.resolve(targetDir);
-const filePath = path.join(absoluteTargetDir, fileName);
+const fileName = `use-${hookName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`).replace(/^-/, '')}.ts`
+const absoluteTargetDir = path.resolve(targetDir)
+const filePath = path.join(absoluteTargetDir, fileName)
 
 const content = `import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 // Assume the Hono RPC client is exported from @/lib/rpc-client
@@ -60,13 +60,13 @@ export function useCreate${hookName}() {
     },
   });
 }
-`;
+`
 
 if (!fs.existsSync(absoluteTargetDir)) {
-  fs.mkdirSync(absoluteTargetDir, { recursive: true });
+  fs.mkdirSync(absoluteTargetDir, { recursive: true })
 }
 
-fs.writeFileSync(filePath, content);
+fs.writeFileSync(filePath, content)
 console.log(
-  `\x1b[32m[SUCCESS]\x1b[0m Hono RPC Wrapper Hook 'use${hookName}' generated successfully at: ${filePath}`
-);
+  `\x1b[32m[SUCCESS]\x1b[0m Hono RPC Wrapper Hook 'use${hookName}' generated successfully at: ${filePath}`,
+)

@@ -22,7 +22,8 @@ audience: End Users, Developers, Open Source Community
 
 [![npm version](https://img.shields.io/npm/v/fluksos?style=flat-square&color=cb3837&logo=npm)](https://www.npmjs.com/package/fluksos)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://github.com/pasqualinigui/fluksos/blob/main/LICENSE)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D22.0.0-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=flat-square)](.github/CODE_OF_CONDUCT.md)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D24.0.0-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![pnpm](https://img.shields.io/badge/pnpm-11.6.0-f69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
@@ -35,7 +36,10 @@ audience: End Users, Developers, Open Source Community
 Fluksos is not a boilerplate. It is a **Governance Engine**. 
 When senior engineers start a new project, they spend weeks configuring Turborepo, Linters, Observability, CI hooks, and Security Policies. Fluksos automates this entirely, delivering a `Top 1%` architecture in a single command.
 
-- 🛡️ **Built-in AST Validation:** A custom AST parser actively bans bad code (like using `axios` or fetching directly in client components).
+- 📏 **Internal Governance**: We "eat our own dog food". This repository is strictly protected by Biome, Lefthook, and GitHub Actions CI pipelines to ensure the generator itself is always deterministically sound.
+
+- 🛡️ **Built-in AST Validation:** A custom AST parser actively bans bad code (like using `MD5`, `axios` or fetching directly in client components).
+- 🐘 **PostgreSQL 18 Senior Default:** Auto-generates schemas leveraging AIO, `uuidv7()` for perfect B-Tree locality, and `VIRTUAL` generated columns.
 - 🔒 **Zero-Day Security:** Ships out-of-the-box with strict CSP Headers, HSTS, and Upstash Rate Limiting to prevent brute-force attacks.
 - 🚀 **Performance Obsessed:** Powered by Turborepo, Biome, and Turbopack. Tests are handled by Vitest.
 - 🤖 **AEO Native:** Built-in AI Engine Optimization (`/llms.txt` and server-rendered JSON-LD) so LLMs can read your app perfectly.
