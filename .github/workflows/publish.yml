@@ -44,7 +44,7 @@ jobs:
           # The action will open a "Version Packages" PR.
           # When you merge that PR, this workflow runs again, detects no unreleased changes,
           # and executes the publish command instead.
-          publish: pnpm publish --no-git-checks --access public
+          publish: pnpm publish --no-git-checks --access public --provenance
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
