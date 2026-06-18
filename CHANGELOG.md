@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.0.21
+
+### Patch Changes
+
+- 6809130: update pnpm and refine CLI header
+
 ## 1.0.20
 
 ### Patch Changes
