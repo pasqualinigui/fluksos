@@ -697,25 +697,34 @@ async function validateScaffold(ctx) {
 }
 
 function printNextSteps(ctx) {
-	ctx.log.done("Scaffold complete.");
-	console.log("\nNext steps:");
+	// Imprime a mensagem de sucesso em verde
+	console.log("\n\x1b[32m[DONE] 🚀 Scaffold complete! Welcome to the Fluksos Enterprise ecosystem.\x1b[0m\n");
+
+	console.log("Next steps to start coding:");
 	console.log(`  cd ${ctx.targetDirectory}`);
 	if (!ctx.shouldInstall) console.log("  pnpm install");
 	console.log("  pnpm dev");
 
 	if (ctx.tier === 3) {
-		console.log("\n# Database (Tier 3):");
-		console.log("  docker compose -f apps/web/docker-compose.yml up -d");
-		console.log("  pnpm --filter web db:generate");
-		console.log("  pnpm --filter web db:migrate");
-		console.log("  pnpm --filter web db:studio");
+		console.log("\n# 🗄️  Database & ORM (Tier 3):");
+		console.log("  1. Start the PostgreSQL + pgvector container:");
+		console.log("     docker compose -f apps/web/docker-compose.yml up -d");
+		console.log("  2. Generate SQL migrations based on your Drizzle schema:");
+		console.log("     pnpm --filter web db:generate");
+		console.log("  3. Apply migrations to the database:");
+		console.log("     pnpm --filter web db:push");
+		console.log("  4. Open Drizzle Studio to view your tables visually:");
+		console.log("     pnpm --filter web db:studio");
 	}
 
-	console.log("\n# Observability & Load Testing (optional):");
-	console.log("  1. Start telemetry: docker compose -f observability/docker-compose.observability.yml up -d");
-	console.log("  2. Start the app:   pnpm dev");
-	console.log("  3. Run K6 test:     cd tests/performance/k6 && k6 run smoke.js");
-	console.log("  * Note: Requires K6 installed on your machine (https://k6.io)");
+	console.log("\n# 📊 Observability & Load Testing (Production Ready):");
+	console.log("  1. Start the Grafana, Prometheus & Tempo telemetry stack:");
+	console.log("     docker compose -f observability/docker-compose.observability.yml up -d");
+	console.log("  2. Start the Next.js app to emit traces:");
+	console.log("     pnpm dev");
+	console.log("  3. Stress test your API limits:");
+	console.log("     cd tests/performance/k6 && k6 run smoke.js");
+	console.log("  * Note: Requires K6 installed locally (https://k6.io)");
 }
 
 async function runStep(ctx, name, fn) {
