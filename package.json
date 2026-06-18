@@ -1,6 +1,6 @@
 {
   "name": "fluksos",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "The Enterprise Stack Generator — Deterministic scaffolds for modern stacks",
   "repository": {
     "type": "git",
