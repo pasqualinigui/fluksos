@@ -2,6 +2,10 @@
   "name": "fluksos",
   "version": "1.0.19",
   "description": "The Enterprise Stack Generator — Deterministic scaffolds for modern stacks",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pasqualinigui/fluksos.git"
+  },
   "type": "module",
   "engines": {
     "node": ">=24.0.0"
