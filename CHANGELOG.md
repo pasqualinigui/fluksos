@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.2.2
+
+### Patch Changes
+
+- 165f328: fix(observability): fix loki docker container permissions and update deprecated otel logging exporter to debug
+
 ## 1.2.1
 
 ### Patch Changes
