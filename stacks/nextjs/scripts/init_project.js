@@ -46,7 +46,7 @@ const STACK_VERSIONS = {
   otelApiLogs: '0.52.1',
   otelSdkLogs: '0.52.1',
   otelExporterLogsOtlpHttp: '0.52.1',
-  grafanaPyroscopeNodejs: '1.4.1',
+  pyroscopeNodejs: '0.4.13',
 }
 
 // ==========================================
@@ -439,7 +439,7 @@ async function installTierDependencies(ctx) {
         `pg@${STACK_VERSIONS.pg}`,
         `better-auth@${STACK_VERSIONS.betterAuth}`,
         `@tanstack/react-query@${STACK_VERSIONS.tanstackQuery}`,
-        `@grafana/pyroscope-nodejs@${STACK_VERSIONS.grafanaPyroscopeNodejs}`,
+        `@pyroscope/nodejs@${STACK_VERSIONS.pyroscopeNodejs}`,
         '--ignore-scripts',
       ],
       {
