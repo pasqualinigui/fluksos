@@ -85,15 +85,15 @@ Fluksos is massive. To keep this page clean, we have segmented our deep-dive tec
 | [**Code Generators**](./docs/GENERATORS.md) | How to auto-generate **Next.js Server Actions** and **Hono RPC Hooks**, and the "Golden Rules" behind them. |
 | [**AST Validators**](./docs/VALIDATORS.md) | The **React/Next.js Tribunal**. Understand how our AST parser runs on `git commit` to block React-specific architectural crimes. |
 
-### 🦁 NestJS Stack (Roadmap)
-*Enterprise backend microservices powered by Fastify and Drizzle.*
-- Documentation coming soon.
+### 🚀 React + Vite Stack (Roadmap)
+  *Fast SPAs and internal Admin Dashboards.*
+  - Documentation coming soon.
 
-### 🐘 PostgreSQL Stack (Roadmap)
-*Standalone database architecture and migration scaffolding.*
-- Documentation coming soon.
+### 🚀 NestJS Stack (Roadmap)
+  *Enterprise backend microservices powered by Fastify and Drizzle.*
+  - Documentation coming soon.
 
----
+  ---
 
 ## 🧑‍💻 For Contributors
 
@@ -108,3 +108,4 @@ Are you an open-source contributor looking to add a new stack (e.g., NestJS) or 
   Built with obsession for clean architecture. <br/>
   <a href="https://github.com/pasqualinigui">Follow the Creator</a>
 </div>
+

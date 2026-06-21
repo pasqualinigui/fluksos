@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, realpathSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, realpathSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { generateReport, logReport } from './lib/report-generator.js'
 
@@ -30,6 +30,20 @@ function walk(dir, seen = new Set()) {
 }
 
 export function validateUiState(rootDir) {
+  // Gracefully skip if it's explicitly NOT a Next.js / React project
+  const pkgPath = join(rootDir, 'package.json')
+  if (existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'))
+      const deps = { ...pkg.dependencies, ...pkg.devDependencies }
+      if (!deps.next && !deps.react) {
+        return [] // Not a React/Next project
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   const files = walk(rootDir)
   const violations = []
 

@@ -71,19 +71,17 @@ const STACK_REGISTRY = {
       { script: 'validate-ui-state.js', label: 'UI State Boundary Validation' },
     ],
   },
-  // Future stacks — add here when implemented:
+  // Future stacks - add here when implemented:
+  // react-vite: {
+  //   description: 'React + Vite - Fast SPAs and internal Admin Dashboards',
+  //   init: 'init_project.js',
+  // },
   // nestjs: {
-  //   description: 'NestJS — Fastify, Hono Edge, Guards, Modules',
+  //   description: 'NestJS - Enterprise backend microservices powered by Fastify',
   //   init: 'init_project.js',
   //   generators: { controller: { ... }, service: { ... } },
   //   validators: [ ... ],
-  // },
-  // postgres: {
-  //   description: 'PostgreSQL — Docker, Drizzle ORM, pgvector',
-  //   init: 'init_database.js',
-  //   generators: { migration: { ... }, seed: { ... } },
-  //   validators: [ ... ],
-  // },
+  // }
 }
 
 // ==========================================
@@ -131,8 +129,8 @@ function printHelp() {
   for (const [name] of Object.entries(STACK_REGISTRY)) {
     console.log(`  \x1b[1m\x1b[32m${name.padEnd(10)}\x1b[0m \x1b[90m— (Available)\x1b[0m`)
   }
+  console.log(`  \x1b[90m${'react-vite'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m`)
   console.log(`  \x1b[90m${'nestjs'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m`)
-  console.log(`  \x1b[90m${'postgres'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m`)
   console.log('')
 
   console.log('\x1b[1m\x1b[36m💡 HOW TO EXPLORE\x1b[0m')

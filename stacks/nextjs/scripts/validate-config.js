@@ -7,10 +7,12 @@ export function validateConfig(rootDir) {
 
   // 1. Check package.json for forbidden dependencies & scripts
   const pkgPath = join(rootDir, 'package.json')
+  let isNextJs = false
   if (existsSync(pkgPath)) {
     try {
       const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'))
       const deps = { ...pkg.dependencies, ...pkg.devDependencies }
+      if (deps.next) isNextJs = true
 
       const forbidden = [
         { name: 'axios', reason: 'Use native fetch or fetcher.ts instead.' },
@@ -101,21 +103,23 @@ export function validateConfig(rootDir) {
     }
   }
 
-  // 3. Check next.config.ts for typedRoutes
-  const nextConfigPath = join(rootDir, 'next.config.ts')
-  if (existsSync(nextConfigPath)) {
-    try {
-      const nextContent = readFileSync(nextConfigPath, 'utf8')
-      if (!/typedRoutes:\s*true/.test(nextContent)) {
-        violations.push({
-          file: 'next.config.ts',
-          rule: 'missing-typed-routes',
-          message: 'Next.js config MUST have experimental: { typedRoutes: true }.',
-          severity: 'FATAL',
-        })
+  // 3. Check next.config.ts for typedRoutes (Only if Next.js)
+  if (isNextJs) {
+    const nextConfigPath = join(rootDir, 'next.config.ts')
+    if (existsSync(nextConfigPath)) {
+      try {
+        const nextContent = readFileSync(nextConfigPath, 'utf8')
+        if (!/typedRoutes:\s*true/.test(nextContent)) {
+          violations.push({
+            file: 'next.config.ts',
+            rule: 'missing-typed-routes',
+            message: 'Next.js config MUST have experimental: { typedRoutes: true }.',
+            severity: 'FATAL',
+          })
+        }
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
     }
   }
 
@@ -143,23 +147,54 @@ export function validateConfig(rootDir) {
     }
   }
 
-  // 5. Check .env for leaked secrets
+  // 5. Check .env for leaked secrets and sync with .env.example
   const envPath = join(rootDir, '.env')
+  const envExamplePath = join(rootDir, '.env.example')
+
   if (existsSync(envPath)) {
     try {
       const envContent = readFileSync(envPath, 'utf8')
       const lines = envContent.split('\n')
+      const envKeys = new Set()
+
       for (const line of lines) {
+        const trimmed = line.trim()
+        if (!trimmed || trimmed.startsWith('#')) continue
+
+        const key = trimmed.split('=')[0]
+        if (key) envKeys.add(key)
+
         if (
-          line.startsWith('NEXT_PUBLIC_') &&
-          (line.includes('SECRET') || line.includes('PRIVATE'))
+          trimmed.startsWith('NEXT_PUBLIC_') &&
+          (trimmed.includes('SECRET') || trimmed.includes('PRIVATE'))
         ) {
           violations.push({
             file: '.env',
             rule: 'leaked-secret-env',
-            message: `FATAL: You are exposing a secret to the browser: ${line.split('=')[0]}. Never prefix secrets with NEXT_PUBLIC_.`,
+            message: `FATAL: You are exposing a secret to the browser: ${key}. Never prefix secrets with NEXT_PUBLIC_.`,
             severity: 'FATAL',
           })
+        }
+      }
+
+      // Sync with .env.example
+      if (existsSync(envExamplePath)) {
+        const exampleContent = readFileSync(envExamplePath, 'utf8')
+        const exampleLines = exampleContent.split('\n')
+
+        for (const line of exampleLines) {
+          const trimmed = line.trim()
+          if (!trimmed || trimmed.startsWith('#')) continue
+
+          const key = trimmed.split('=')[0]
+          if (key && !envKeys.has(key)) {
+            violations.push({
+              file: '.env',
+              rule: 'missing-env-var',
+              message: `FATAL: Missing required environment variable from .env.example: ${key}`,
+              severity: 'FATAL',
+            })
+          }
         }
       }
     } catch {
