@@ -10,6 +10,13 @@ if (!schemaName) {
   process.exit(1)
 }
 
+if (!/^[a-zA-Z0-9_]+$/.test(schemaName)) {
+  console.error(
+    '\x1b[31m[ERROR]\x1b[0m Schema name must be alphanumeric and cannot contain special characters or paths.',
+  )
+  process.exit(1)
+}
+
 // Convert "Users" -> "users", "OrderItems" -> "order_items"
 const tableName = schemaName.replace(/[A-Z]/g, (letter, index) =>
   index === 0 ? letter.toLowerCase() : `_${letter.toLowerCase()}`,

@@ -72,8 +72,13 @@ export function validateConfig(rootDir) {
           severity: 'FATAL',
         })
       }
-    } catch {
-      // ignore parse error
+    } catch (err) {
+      violations.push({
+        file: 'package.json',
+        rule: 'malformed-json',
+        message: `Failed to parse package.json. Ensure it is valid JSON. Error: ${err.message}`,
+        severity: 'FATAL',
+      })
     }
   }
 
@@ -128,8 +133,13 @@ export function validateConfig(rootDir) {
           severity: 'FATAL',
         })
       }
-    } catch {
-      // ignore
+    } catch (err) {
+      violations.push({
+        file: 'components.json',
+        rule: 'malformed-json',
+        message: `Failed to parse components.json. Ensure it is valid JSON. Error: ${err.message}`,
+        severity: 'FATAL',
+      })
     }
   }
 
