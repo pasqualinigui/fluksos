@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.0.27
+
+### Patch Changes
+
+- c7ca254: - **Bugfix:** Fixed `create-next-app` silent failure on Windows caused by incorrect alias quoting. The global `runCommand` executor now correctly respects `shell: true` on Windows, ensuring arguments are passed safely without path corruption.
+
 ## 1.0.26
 
 ### Patch Changes
