@@ -13,4 +13,4 @@ pre-push:
     typecheck:
       run: pnpm typecheck
     architecture:
-      run: npx fluksos@latest validate all .
+      run: pnpm exec fluksos validate all .
