@@ -29,7 +29,7 @@ export async function register() {
     logs.setGlobalLoggerProvider(loggerProvider);
 
     if (process.env.PYROSCOPE_ENABLED === 'true') {
-      const Pyroscope = await import('@grafana/pyroscope-nodejs');
+      const Pyroscope = await import('@pyroscope/nodejs');
       Pyroscope.init({
         serverAddress: process.env.PYROSCOPE_SERVER_ADDRESS ?? 'http://localhost:4040',
         appName: process.env.OTEL_SERVICE_NAME ?? 'nextjs-app'
