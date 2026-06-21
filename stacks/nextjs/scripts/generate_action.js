@@ -12,8 +12,15 @@ if (!actionName || !targetDir) {
   process.exit(1)
 }
 
+if (!/^[a-zA-Z0-9_]+$/.test(actionName)) {
+  console.error(
+    '\x1b[31m[ERROR]\x1b[0m Action name must be alphanumeric and cannot contain special characters or paths.',
+  )
+  process.exit(1)
+}
+
 const fileName = `${actionName.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`).replace(/^-/, '')}.action.ts`
-const absoluteTargetDir = path.resolve(targetDir)
+const absoluteTargetDir = path.resolve(process.cwd(), targetDir)
 const filePath = path.join(absoluteTargetDir, fileName)
 
 const content = `"use server";
@@ -39,6 +46,11 @@ export const ${actionName}Action = actionClient
 
 if (!fs.existsSync(absoluteTargetDir)) {
   fs.mkdirSync(absoluteTargetDir, { recursive: true })
+}
+
+if (fs.existsSync(filePath)) {
+  console.error(`\x1b[31m[ERROR]\x1b[0m Action file already exists at: ${filePath}`)
+  process.exit(1)
 }
 
 fs.writeFileSync(filePath, content)
