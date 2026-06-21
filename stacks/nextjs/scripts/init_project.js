@@ -34,15 +34,19 @@ const STACK_VERSIONS = {
   opentelemetryApi: '1.9.1',
   vercelOtel: '2.1.3',
   sentryNextjs: '10.57.0',
-  vitest: '4.1.8',
+  vitest: '4.1.9',
   jsdom: '29.1.1',
   testingLibraryReact: '16.3.2',
   testingLibraryJestDom: '6.9.1',
   testingLibraryUserEvent: '14.6.1',
-  typesNode: '25.9.3',
+  typesNode: '26.0.0',
   typesPg: '8.20.0',
   upstashRatelimit: '2.0.8',
   upstashRedis: '1.38.0',
+  otelApiLogs: '0.52.1',
+  otelSdkLogs: '0.52.1',
+  otelExporterLogsOtlpHttp: '0.52.1',
+  grafanaPyroscopeNodejs: '1.4.1',
 }
 
 // ==========================================
@@ -382,6 +386,9 @@ async function installCommonDependencies(ctx) {
       `@sentry/nextjs@${STACK_VERSIONS.sentryNextjs}`,
       `next-themes@${STACK_VERSIONS.nextThemes}`,
       `lucide-react@${STACK_VERSIONS.lucideReact}`,
+      `@opentelemetry/api-logs@${STACK_VERSIONS.otelApiLogs}`,
+      `@opentelemetry/sdk-logs@${STACK_VERSIONS.otelSdkLogs}`,
+      `@opentelemetry/exporter-logs-otlp-http@${STACK_VERSIONS.otelExporterLogsOtlpHttp}`,
       '--ignore-scripts',
     ],
     { cwd: ctx.appDir },
@@ -432,6 +439,7 @@ async function installTierDependencies(ctx) {
         `pg@${STACK_VERSIONS.pg}`,
         `better-auth@${STACK_VERSIONS.betterAuth}`,
         `@tanstack/react-query@${STACK_VERSIONS.tanstackQuery}`,
+        `@grafana/pyroscope-nodejs@${STACK_VERSIONS.grafanaPyroscopeNodejs}`,
         '--ignore-scripts',
       ],
       {
@@ -683,17 +691,28 @@ function printNextSteps(ctx) {
   }
 
   console.log('\n\x1b[1m\x1b[35m# 📊 Observability & Load Testing (Production Ready):\x1b[0m')
-  console.log('  \x1b[90m1. Start the Grafana, Prometheus & Tempo telemetry stack:\x1b[0m')
+  console.log(
+    '  \x1b[90m1. Start the Telemetry Stack (Grafana, Prometheus, Tempo, Loki, Pyroscope):\x1b[0m',
+  )
   console.log(
     '     \x1b[32mdocker compose -f observability/docker-compose.observability.yml up -d\x1b[0m',
   )
   console.log('  \x1b[90m2. Start the Next.js app to emit traces:\x1b[0m')
+  if (ctx.tier === 3) {
+    console.log(
+      '     \x1b[90m(To enable Continuous Profiling, set \x1b[37mPYROSCOPE_ENABLED="true"\x1b[90m in your .env file)\x1b[0m',
+    )
+  }
   console.log('     \x1b[32mpnpm dev\x1b[0m')
   console.log(
     '  \x1b[90m3. Access Grafana (Defaults to \x1b[37madmin / admin\x1b[90m. Securely bound to localhost):\x1b[0m',
   )
   console.log('     \x1b[32mhttp://127.0.0.1:3001\x1b[0m')
-  console.log('  \x1b[90m4. Stress test your API limits:\x1b[0m')
+  console.log(
+    '  \x1b[90m4. Access Pyroscope UI (Continuous Profiling - Optional standalone view):\x1b[0m',
+  )
+  console.log('     \x1b[32mhttp://127.0.0.1:4040\x1b[0m')
+  console.log('  \x1b[90m5. Stress test your API limits:\x1b[0m')
   console.log('     \x1b[32mcd tests/performance/k6 && k6 run --out opentelemetry smoke.js\x1b[0m')
   console.log(
     '  \x1b[90m* Note: Requires K6 installed locally (https://grafana.com/docs/k6/latest/set-up/install-k6/)\x1b[0m',

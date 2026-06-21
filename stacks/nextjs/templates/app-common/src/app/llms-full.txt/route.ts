@@ -30,7 +30,7 @@ Detailed description of the second feature.
 - **Frontend**: Next.js 16, React 19, Tailwind CSS 4
 - **Database**: PostgreSQL with Drizzle ORM
 - **Authentication**: Better Auth
-- **Observability**: OpenTelemetry + Sentry
+- **Observability**: OpenTelemetry + Sentry + Loki (Logs) + Pyroscope (Profiling)
 
 ## API
 

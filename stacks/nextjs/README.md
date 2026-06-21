@@ -45,7 +45,7 @@ Templates are **static files**, not code generators. What you put in `templates/
 | `app-common/` | Base Next.js files applied to **all** tiers. Includes `globals.css`, `next.config.ts`, `tsconfig.json`, `components.json`, and basic AEO routing (`llms.txt`, `robots.ts`, `sitemap.ts`, `public/mirrors/home.md`). |
 | `app-tier-2/` | Applied if Tier >= 2. Overlays `lib/safe-action.ts` and `lib/fetcher.server.ts`. |
 | `app-tier-3/` | Applied if Tier === 3. Overlays `db/index.ts`, `drizzle.config.ts`, `lib/auth.ts`, and the Better Auth API route. |
-| `observability/`| Docker Compose stack for OpenTelemetry (Jaeger/Zipkin/Prometheus/Grafana). |
+| `observability/`| Docker Compose stack for OpenTelemetry (Prometheus, Tempo, Loki, Pyroscope, Grafana). |
 | `tests/` | K6 performance test scripts. |
 
 ---

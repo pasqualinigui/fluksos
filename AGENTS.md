@@ -73,7 +73,7 @@ fluksos/
 │       │   ├── app-tier-3/                # Applied for --tier 3 only
 │       │   │   ├── Dockerfile             # Standalone production build
 │       │   │   └── docker-compose.yml     # Local pgvector database
-│       │   ├── observability/             # Docker Compose, OTel, Grafana config
+│       │   ├── observability/             # Docker Compose, OTel, Grafana, Loki, Pyroscope config
 │       │   └── tests/                     # K6 performance test scripts
 │       ├── tests/
 │       │   ├── mock-project/              # Fixture project for unit tests (not shipped)
