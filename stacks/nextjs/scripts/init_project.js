@@ -222,7 +222,9 @@ function createContext(options) {
 async function assertPreconditions(ctx) {
   const isWin = process.platform === 'win32'
   const cmd = isWin ? 'pnpm.cmd' : 'pnpm'
-  const result = spawnSync(cmd, ['--version'], { stdio: 'ignore', shell: isWin })
+  const result = isWin
+    ? spawnSync(`${cmd} --version`, { stdio: 'ignore', shell: true })
+    : spawnSync(cmd, ['--version'], { stdio: 'ignore' })
   if (result.error || result.status !== 0) {
     ctx.log.error('pnpm is not installed or not available in PATH.')
     ctx.log.info('To resolve this, please install it globally:')
