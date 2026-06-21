@@ -694,8 +694,10 @@ function printNextSteps(ctx) {
   )
   console.log('     \x1b[32mhttp://127.0.0.1:3001\x1b[0m')
   console.log('  \x1b[90m4. Stress test your API limits:\x1b[0m')
-  console.log('     \x1b[32mcd tests/performance/k6 && k6 run smoke.js\x1b[0m')
-  console.log('  \x1b[90m* Note: Requires K6 installed locally (https://k6.io)\x1b[0m')
+  console.log('     \x1b[32mcd tests/performance/k6 && k6 run --out opentelemetry smoke.js\x1b[0m')
+  console.log(
+    '  \x1b[90m* Note: Requires K6 installed locally (https://grafana.com/docs/k6/latest/set-up/install-k6/)\x1b[0m',
+  )
 }
 
 async function runStep(ctx, name, fn) {
