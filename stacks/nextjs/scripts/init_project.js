@@ -52,7 +52,7 @@ function runCommand(cmd, args, options) {
   const isWin = process.platform === 'win32'
   const command = isWin && (cmd === 'pnpm' || cmd === 'npm' || cmd === 'npx') ? `${cmd}.cmd` : cmd
 
-  const result = spawnSync(command, args, { stdio: 'inherit', ...options })
+  const result = spawnSync(command, args, { stdio: 'inherit', shell: isWin, ...options })
 
   if (result.error || result.status !== 0) {
     throw new Error(`Command failed: ${cmd} ${args.join(' ')}`)
@@ -290,7 +290,7 @@ async function scaffoldNextApp(ctx) {
         '--app',
         '--src-dir',
         '--import-alias',
-        '"@/*"',
+        '@/*',
         '--use-pnpm',
         '--turbopack',
         '--skip-install',
