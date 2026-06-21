@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -112,13 +112,9 @@ function runScript(stackName, scriptName, scriptArgs) {
   const scriptsDir = getStackScriptsDir(stackName)
   const scriptPath = path.join(scriptsDir, scriptName)
 
-  // Escape arguments with quotes to handle spaces (except flags starting with --)
-  const safeArgs = scriptArgs.map((arg) => (arg.startsWith('--') ? arg : `"${arg}"`))
-  const cmd = `node "${scriptPath}" ${safeArgs.join(' ')}`
+  const result = spawnSync('node', [scriptPath, ...scriptArgs], { stdio: 'inherit' })
 
-  try {
-    execSync(cmd, { stdio: 'inherit' })
-  } catch {
+  if (result.error || result.status !== 0) {
     console.error(`\x1b[31m[ERROR] Failed to execute ${stackName}/${scriptName}\x1b[0m`)
     process.exit(1)
   }

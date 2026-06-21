@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { execSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -49,11 +49,13 @@ const STACK_VERSIONS = {
 // 0. Helpers
 // ==========================================
 function runCommand(cmd, args, options) {
-  const fullCmd = `${cmd} ${args.join(' ')}`
-  try {
-    execSync(fullCmd, { stdio: 'inherit', ...options })
-  } catch {
-    throw new Error(`Command failed: ${fullCmd}`)
+  const isWin = process.platform === 'win32'
+  const command = isWin && (cmd === 'pnpm' || cmd === 'npm' || cmd === 'npx') ? `${cmd}.cmd` : cmd
+
+  const result = spawnSync(command, args, { stdio: 'inherit', ...options })
+
+  if (result.error || result.status !== 0) {
+    throw new Error(`Command failed: ${cmd} ${args.join(' ')}`)
   }
 }
 
@@ -208,9 +210,10 @@ function createContext(options) {
 }
 
 async function assertPreconditions(ctx) {
-  try {
-    execSync('pnpm --version', { stdio: 'ignore' })
-  } catch {
+  const isWin = process.platform === 'win32'
+  const cmd = isWin ? 'pnpm.cmd' : 'pnpm'
+  const result = spawnSync(cmd, ['--version'], { stdio: 'ignore' })
+  if (result.error || result.status !== 0) {
     ctx.log.error('pnpm is not installed or not available in PATH.')
     ctx.log.info('To resolve this, please install it globally:')
     ctx.log.info('  > npm install -g pnpm')
@@ -252,8 +255,12 @@ async function createWorkspaceRoot(ctx) {
 
   writeJson(path.join(ctx.workspaceRoot, 'turbo.json'), {
     $schema: 'https://turbo.build/schema.json',
+    globalEnv: ['.env'],
     tasks: {
-      build: { outputs: ['.next/**', '!.next/cache/**'] },
+      build: {
+        outputs: ['.next/**', '!.next/cache/**'],
+        inputs: ['$TURBO_DEFAULT$', '.env', '.env.*'],
+      },
       dev: { persistent: true, cache: false },
       typecheck: { dependsOn: ['^typecheck'] },
       test: { dependsOn: ['^build'] },
@@ -477,7 +484,7 @@ async function applyTierTemplates(ctx) {
     mergePackageJson(path.join(ctx.appDir, 'package.json'), {
       scripts: {
         'db:generate': 'drizzle-kit generate',
-        'db:push': 'NODE_ENV=development drizzle-kit push',
+        'db:push': 'drizzle-kit push',
         'db:studio': 'drizzle-kit studio',
       },
     })
@@ -680,6 +687,18 @@ async function runStep(ctx, name, fn) {
   } catch (err) {
     ctx.log.error(`Failed at step: ${name}`)
     console.error(err)
+
+    // Graceful teardown (Rollback)
+    if (ctx.targetDirectory !== '.' && fs.existsSync(ctx.workspaceRoot)) {
+      ctx.log.warn(`[ROLLBACK] Cleaning up corrupted directory: ${ctx.targetDirectory}`)
+      try {
+        fs.rmSync(ctx.workspaceRoot, { recursive: true, force: true })
+        ctx.log.info('[ROLLBACK] Cleanup complete.')
+      } catch (cleanupErr) {
+        ctx.log.error(`[ROLLBACK] Failed to clean up: ${cleanupErr.message}`)
+      }
+    }
+
     process.exit(1)
   }
 }
