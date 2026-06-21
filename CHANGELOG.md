@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.1.0
+
+### Minor Changes
+
+- 3d51f3b: feat: upgrade to k6 v2.0 natively with OpenTelemetry export and MCP AI-agent support
+
 ## 1.0.28
 
 ### Patch Changes
