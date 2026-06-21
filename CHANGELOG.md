@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.2.1
+
+### Patch Changes
+
+- 9b86bb4: fix(observability): correct pyroscope nodejs package name from @grafana/pyroscope-nodejs to @pyroscope/nodejs
+
 ## 1.2.0
 
 ### Minor Changes
