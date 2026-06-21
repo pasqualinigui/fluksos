@@ -93,6 +93,20 @@ function findAppRoots(dir, roots = [], seen = new Set()) {
 }
 
 export function validateArchitecture(rootDir) {
+  // Gracefully skip if it's explicitly NOT a Next.js project
+  const pkgPath = join(rootDir, 'package.json')
+  if (existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'))
+      const deps = { ...pkg.dependencies, ...pkg.devDependencies }
+      if (!deps.next) {
+        return [] // Not a Next.js project, safe to skip Next.js architectural rules
+      }
+    } catch {
+      // ignore
+    }
+  }
+
   const files = walk(rootDir)
   const violations = []
   const appRoots = findAppRoots(rootDir)
