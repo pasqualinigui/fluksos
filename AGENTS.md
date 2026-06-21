@@ -241,6 +241,8 @@ Tests import the validator functions directly and run them against the `mock-pro
 
 7. **Do not remove or weaken Security Headers in `next.config.ts`.** The scaffold is designed to ship with a strict Content-Security-Policy (CSP) and HSTS. If asked to add external scripts or styles, append them to the existing CSP directives instead of removing the headers.
 
+8. **K6 Test Generation:** The Fluksos ecosystem uses k6 v2.0+ which natively supports MCP. When generating or editing test scripts for the `tests/` directory, always use the new Assertion API `expect()` instead of the legacy `check()` function.
+
 ---
 
 ## Adding a New Stack
