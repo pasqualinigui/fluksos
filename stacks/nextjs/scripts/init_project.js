@@ -52,7 +52,17 @@ function runCommand(cmd, args, options) {
   const isWin = process.platform === 'win32'
   const command = isWin && (cmd === 'pnpm' || cmd === 'npm' || cmd === 'npx') ? `${cmd}.cmd` : cmd
 
-  const result = spawnSync(command, args, { stdio: 'inherit', shell: isWin, ...options })
+  let result
+  if (isWin) {
+    // Passing array to shell:true triggers DEP0190. Joining is safe here since we control all args.
+    result = spawnSync(`${command} ${args.join(' ')}`, {
+      stdio: 'inherit',
+      shell: true,
+      ...options,
+    })
+  } else {
+    result = spawnSync(command, args, { stdio: 'inherit', ...options })
+  }
 
   if (result.error || result.status !== 0) {
     throw new Error(`Command failed: ${cmd} ${args.join(' ')}`)
@@ -483,9 +493,9 @@ async function applyTierTemplates(ctx) {
 
     mergePackageJson(path.join(ctx.appDir, 'package.json'), {
       scripts: {
-        'db:generate': 'drizzle-kit generate',
-        'db:push': 'drizzle-kit push',
-        'db:studio': 'drizzle-kit studio',
+        'db:generate': 'drizzle-kit generate --config=drizzle.config.ts',
+        'db:push': 'drizzle-kit push --config=drizzle.config.ts',
+        'db:studio': 'drizzle-kit studio --config=drizzle.config.ts',
       },
     })
   }
@@ -653,31 +663,37 @@ function printNextSteps(ctx) {
     '\n\x1b[32m[DONE] 🚀 Scaffold complete! Welcome to the Fluksos Enterprise ecosystem.\x1b[0m\n',
   )
 
-  console.log('Next steps to start coding:')
+  console.log('\x1b[1m\x1b[36mNext steps to start coding:\x1b[0m')
   console.log(`  cd ${ctx.targetDirectory}`)
   if (!ctx.shouldInstall) console.log('  pnpm install')
   console.log('  pnpm dev')
 
   if (ctx.tier === 3) {
-    console.log('\n# 🗄️  Database & ORM (Tier 3):')
-    console.log('  1. Start the PostgreSQL + pgvector container:')
-    console.log('     docker compose -f apps/web/docker-compose.yml up -d')
-    console.log('  2. Generate SQL migrations based on your Drizzle schema:')
-    console.log('     pnpm --filter web db:generate')
-    console.log('  3. Apply migrations to the database:')
-    console.log('     pnpm --filter web db:push')
-    console.log('  4. Open Drizzle Studio to view your tables visually:')
-    console.log('     pnpm --filter web db:studio')
+    console.log('\n\x1b[1m\x1b[33m# 🗄️  Database & ORM (Tier 3):\x1b[0m')
+    console.log('  \x1b[90m1. Start the PostgreSQL + pgvector container:\x1b[0m')
+    console.log('     \x1b[32mdocker compose -f apps/web/docker-compose.yml up -d\x1b[0m')
+    console.log('  \x1b[90m2. Generate SQL migrations based on your Drizzle schema:\x1b[0m')
+    console.log('     \x1b[32mpnpm --filter web db:generate\x1b[0m')
+    console.log('  \x1b[90m3. Apply migrations to the database:\x1b[0m')
+    console.log('     \x1b[32mpnpm --filter web db:push\x1b[0m')
+    console.log('  \x1b[90m4. Open Drizzle Studio to view your tables visually:\x1b[0m')
+    console.log('     \x1b[32mpnpm --filter web db:studio\x1b[0m')
   }
 
-  console.log('\n# 📊 Observability & Load Testing (Production Ready):')
-  console.log('  1. Start the Grafana, Prometheus & Tempo telemetry stack:')
-  console.log('     docker compose -f observability/docker-compose.observability.yml up -d')
-  console.log('  2. Start the Next.js app to emit traces:')
-  console.log('     pnpm dev')
-  console.log('  3. Stress test your API limits:')
-  console.log('     cd tests/performance/k6 && k6 run smoke.js')
-  console.log('  * Note: Requires K6 installed locally (https://k6.io)')
+  console.log('\n\x1b[1m\x1b[35m# 📊 Observability & Load Testing (Production Ready):\x1b[0m')
+  console.log('  \x1b[90m1. Start the Grafana, Prometheus & Tempo telemetry stack:\x1b[0m')
+  console.log(
+    '     \x1b[32mdocker compose -f observability/docker-compose.observability.yml up -d\x1b[0m',
+  )
+  console.log('  \x1b[90m2. Start the Next.js app to emit traces:\x1b[0m')
+  console.log('     \x1b[32mpnpm dev\x1b[0m')
+  console.log(
+    '  \x1b[90m3. Access Grafana (Defaults to \x1b[37madmin / admin\x1b[90m. Securely bound to localhost):\x1b[0m',
+  )
+  console.log('     \x1b[32mhttp://127.0.0.1:3001\x1b[0m')
+  console.log('  \x1b[90m4. Stress test your API limits:\x1b[0m')
+  console.log('     \x1b[32mcd tests/performance/k6 && k6 run smoke.js\x1b[0m')
+  console.log('  \x1b[90m* Note: Requires K6 installed locally (https://k6.io)\x1b[0m')
 }
 
 async function runStep(ctx, name, fn) {
