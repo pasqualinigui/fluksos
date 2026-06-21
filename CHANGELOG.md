@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.2.0
+
+### Minor Changes
+
+- 922b2fa: feat(observability): implement Tier 3 observability stack with Loki and Pyroscope
+
 ## 1.1.0
 
 ### Minor Changes
