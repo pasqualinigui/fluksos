@@ -1,40 +1,56 @@
-import { existsSync, readdirSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, realpathSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { analyzeFile } from './lib/ast-parser.js'
 import { generateReport, logReport } from './lib/report-generator.js'
 
-function walk(dir) {
+function walk(dir, seen = new Set()) {
   try {
+    // Prevent infinite symlink loops
+    const realDir = realpathSync(dir)
+    if (seen.has(realDir)) return []
+    seen.add(realDir)
+
     const entries = readdirSync(dir)
     return entries.flatMap((entry) => {
       const fullPath = join(dir, entry)
-      const stat = statSync(fullPath)
-      if (stat.isDirectory()) {
-        if (
-          [
-            'node_modules',
-            '.git',
-            '.next',
-            '.turbo',
-            '.agent',
-            '.agents',
-            'dist',
-            'build',
-            'out',
-          ].includes(entry)
-        )
-          return []
-        return walk(fullPath)
+      try {
+        const stat = statSync(fullPath)
+        if (stat.isDirectory()) {
+          if (
+            [
+              'node_modules',
+              '.git',
+              '.next',
+              '.turbo',
+              '.agent',
+              '.agents',
+              'dist',
+              'build',
+              'out',
+            ].includes(entry)
+          )
+            return []
+          return walk(fullPath, seen)
+        }
+        return [fullPath]
+      } catch (err) {
+        // Handle EACCES or ENOENT silently on individual files
+        if (err.code === 'EACCES' || err.code === 'ENOENT') return []
+        throw err
       }
-      return [fullPath]
     })
-  } catch {
+  } catch (err) {
+    if (err.code === 'EACCES' || err.code === 'ENOENT') return []
     return []
   }
 }
 
-function findAppRoots(dir, roots = []) {
+function findAppRoots(dir, roots = [], seen = new Set()) {
   try {
+    const realDir = realpathSync(dir)
+    if (seen.has(realDir)) return roots
+    seen.add(realDir)
+
     const entries = readdirSync(dir)
     if (
       entries.includes('next.config.ts') ||
@@ -59,13 +75,19 @@ function findAppRoots(dir, roots = []) {
       )
         continue
       const fullPath = join(dir, entry)
-      const stat = statSync(fullPath)
-      if (stat.isDirectory()) {
-        findAppRoots(fullPath, roots)
+      try {
+        const stat = statSync(fullPath)
+        if (stat.isDirectory()) {
+          findAppRoots(fullPath, roots, seen)
+        }
+      } catch (err) {
+        if (err.code === 'EACCES' || err.code === 'ENOENT') continue
+        throw err
       }
     }
     return roots
-  } catch {
+  } catch (err) {
+    if (err.code === 'EACCES' || err.code === 'ENOENT') return roots
     return roots
   }
 }

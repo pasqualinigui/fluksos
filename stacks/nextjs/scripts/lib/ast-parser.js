@@ -3,7 +3,11 @@ import { readFileSync } from 'node:fs'
 export function analyzeFile(filePath, relPath) {
   const violations = []
   try {
-    const content = readFileSync(filePath, 'utf8')
+    let content = readFileSync(filePath, 'utf8')
+
+    // Pre-processor: Strip comments to prevent false positives in AST regexes
+    // Removes multi-line comments /* ... */ and single-line comments // ...
+    content = content.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '')
 
     // 1. Server-Only Expansion (services/, actions/, db/, fetcher.ts)
     if (
@@ -24,7 +28,7 @@ export function analyzeFile(filePath, relPath) {
     }
 
     // 2. Legacy Next.js Cache & React imports
-    if (/import\s*\{\s*[^}]*unstable_cache/.test(content)) {
+    if (/import\s+\{[^}]*unstable_cache/.test(content)) {
       violations.push({
         file: relPath,
         rule: 'deprecated-unstable-cache',
@@ -52,7 +56,7 @@ export function analyzeFile(filePath, relPath) {
     }
 
     // 2.5. React Context, Redux, and Axios Ban
-    if (/import\s*\{[^}]*createContext[^}]*\}\s*from\s*['"]react['"]/.test(content)) {
+    if (/import\s+\{[^}]*createContext[^}]*\}\s+from\s+['"]react['"]/.test(content)) {
       violations.push({
         file: relPath,
         rule: 'banned-react-context',
@@ -80,7 +84,7 @@ export function analyzeFile(filePath, relPath) {
       })
     }
 
-    if (/import\s*\{\s*[^}]*db\s*\}/.test(content)) {
+    if (/import\s+\{[^}]*\bdb\b[^}]*\}\s+from/.test(content)) {
       if (
         !relPath.startsWith('src/db/') &&
         !relPath.startsWith('src/services/') &&
@@ -134,7 +138,7 @@ export function analyzeFile(filePath, relPath) {
         })
       }
 
-      if (/import\s*\{\s*[^}]*db\s*\}/.test(content)) {
+      if (/import\s+\{[^}]*\bdb\b[^}]*\}\s+from/.test(content)) {
         violations.push({
           file: relPath,
           rule: 'db-in-page',
@@ -171,7 +175,7 @@ export function analyzeFile(filePath, relPath) {
         })
       }
 
-      if (/import\s*\{\s*[^}]*db\s*\}/.test(content)) {
+      if (/import\s+\{[^}]*\bdb\b[^}]*\}\s+from/.test(content)) {
         violations.push({
           file: relPath,
           rule: 'db-in-client-component',
@@ -194,7 +198,7 @@ export function analyzeFile(filePath, relPath) {
 
     // 5. Zustand Isolation
     if (relPath.startsWith('src/stores/')) {
-      if (/fetch\(|useQuery|axios|import\s*\{\s*[^}]*db\s*\}|fetcher/.test(content)) {
+      if (/fetch\(|useQuery|axios|import\s+\{[^}]*\bdb\b[^}]*\}\s+from|fetcher/.test(content)) {
         violations.push({
           file: relPath,
           rule: 'remote-data-in-zustand',

@@ -1,20 +1,30 @@
-import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { readdirSync, readFileSync, realpathSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { generateReport, logReport } from './lib/report-generator.js'
 
-function walk(dir) {
+function walk(dir, seen = new Set()) {
   try {
+    const realDir = realpathSync(dir)
+    if (seen.has(realDir)) return []
+    seen.add(realDir)
+
     const entries = readdirSync(dir)
     return entries.flatMap((entry) => {
       const fullPath = join(dir, entry)
-      const stat = statSync(fullPath)
-      if (stat.isDirectory()) {
-        if (fullPath.includes('node_modules') || fullPath.includes('.git')) return []
-        return walk(fullPath)
+      try {
+        const stat = statSync(fullPath)
+        if (stat.isDirectory()) {
+          if (fullPath.includes('node_modules') || fullPath.includes('.git')) return []
+          return walk(fullPath, seen)
+        }
+        return [fullPath]
+      } catch (err) {
+        if (err.code === 'EACCES' || err.code === 'ENOENT') return []
+        throw err
       }
-      return [fullPath]
     })
-  } catch {
+  } catch (err) {
+    if (err.code === 'EACCES' || err.code === 'ENOENT') return []
     return []
   }
 }
