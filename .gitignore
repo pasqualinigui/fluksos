@@ -1,6 +1,9 @@
 # CLI Dependencies
 node_modules/
 
+# Specs
+specs/
+
 # Log files and tests
 *.log
 .tmp/
@@ -9,3 +12,4 @@ node_modules/
 # Secret directory for AI Agents
 .agent/
 .agents/
+.specify/

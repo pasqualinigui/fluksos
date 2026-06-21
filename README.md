@@ -80,7 +80,7 @@ Fluksos is massive. To keep this page clean, we have segmented our deep-dive tec
 
 | Documentation | Description |
 |---|---|
-| [**Architecture & Tiers**](./docs/NEXTJS_STACK.md) | Deep dive into the Architecture Tiers, Turborepo layout, AEO, Observability (Grafana/K6), and the Docker DB Workflow. |
+| [**Architecture & Tiers**](./docs/NEXTJS_STACK.md) | Deep dive into the Architecture Tiers, Turborepo layout, AEO, Observability (Grafana, Loki, Pyroscope, K6), and the Docker DB Workflow. |
 | [**Security & Rate Limiting**](./docs/SECURITY.md) | **Next.js specific** Zero-Day security via CSP, HSTS, Upstash Rate Limiting, and strict Better Auth defaults. |
 | [**Code Generators**](./docs/GENERATORS.md) | How to auto-generate **Next.js Server Actions** and **Hono RPC Hooks**, and the "Golden Rules" behind them. |
 | [**AST Validators**](./docs/VALIDATORS.md) | The **React/Next.js Tribunal**. Understand how our AST parser runs on `git commit` to block React-specific architectural crimes. |

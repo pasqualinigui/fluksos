@@ -40,7 +40,7 @@ const STACK_REGISTRY = {
       'Turborepo Monorepo Architecture for scalable workspaces',
       'Biome for ultra-fast formatting and linting',
       'Vitest configured for unit and integration testing',
-      'Comprehensive Observability (OpenTelemetry, Grafana + K6 load testing)',
+      'Comprehensive Observability (OpenTelemetry, Grafana, Loki, Pyroscope + K6 load testing)',
       'Built-in Upstash Rate Limiting (Redis) for Tier 2 and 3',
       'Strict Security Headers (CSP, HSTS) out-of-the-box',
       'Lefthook enforcing pre-commit Git Hooks',
