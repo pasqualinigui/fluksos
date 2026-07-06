@@ -1,5 +1,15 @@
 # fluksos
 
+## 1.3.0
+
+### Minor Changes
+
+- bd699f9: feat(nextjs): implement hybrid rate limiting (account + ip) in tier 3 safe-action.ts
+
+### Patch Changes
+
+- accecf5: fix(ci): fix native vitest runner mismatch in AGENTS.md and add --no-errors-on-unmatched to biome hook
+
 ## 1.2.2
 
 ### Patch Changes
