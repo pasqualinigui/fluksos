@@ -216,9 +216,7 @@ To run tests:
 
 ```bash
 cd stacks/nextjs/scripts
-node --test ../tests/validate-architecture.test.js
-node --test ../tests/validate-config.test.js
-node --test ../tests/validate-ui-state.test.js
+pnpm test
 ```
 
 Tests import the validator functions directly and run them against the `mock-project/` fixture, asserting the presence or absence of specific rule violations.
