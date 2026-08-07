@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.3.1
+
+### Patch Changes
+
+- c1fb759: fix(ci): bump version to resolve NPM 403 Forbidden publishing conflict
+
 ## 1.3.0
 
 ### Minor Changes
