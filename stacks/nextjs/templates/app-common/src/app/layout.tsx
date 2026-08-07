@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { Providers } from "@/components/providers";
 import { ThemeProvider } from "@/components/theme-provider";
+import { FaroInit } from "@/components/faro-init";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -70,7 +71,10 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<Providers>{children}</Providers>
+					<Providers>
+						<FaroInit />
+						{children}
+					</Providers>
 				</ThemeProvider>
 			</body>
 		</html>

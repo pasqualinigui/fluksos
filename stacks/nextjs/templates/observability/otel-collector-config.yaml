@@ -5,6 +5,10 @@ receivers:
         endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins: ["http://localhost:3000"]
+          allowed_headers: ["*"]
+          max_age: 7200
 
 processors:
   batch:
@@ -20,7 +24,7 @@ exporters:
     tls:
       insecure: true
   otlphttp/loki:
-    endpoint: "http://loki:3100/otlp"
+    logs_endpoint: "http://loki:3100/otlp/v1/logs"
     tls:
       insecure: true
   debug:

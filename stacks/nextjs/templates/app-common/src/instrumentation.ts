@@ -1,17 +1,9 @@
-import * as Sentry from '@sentry/nextjs';
-
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
     const { registerOTel } = await import('@vercel/otel');
 
     registerOTel({
       serviceName: process.env.OTEL_SERVICE_NAME ?? 'nextjs-app'
-    });
-
-    Sentry.init({
-      dsn: process.env.SENTRY_DSN,
-      tracesSampleRate: 1.0,
-      environment: process.env.NODE_ENV
     });
 
     const { logs } = await import('@opentelemetry/api-logs');
@@ -39,4 +31,17 @@ export async function register() {
   }
 }
 
-export const onRequestError = Sentry.captureRequestError;
+export async function onRequestError(error: Error, request: Request, context: { routePath: string }) {
+  const { logs } = await import('@opentelemetry/api-logs');
+  const logger = logs.getLogger('nextjs');
+  logger.emit({
+    severityText: 'ERROR',
+    body: error.message,
+    attributes: {
+      'error.stack': error.stack ?? '',
+      'http.method': request.method,
+      'http.url': request.url,
+      'next.route': context.routePath,
+    },
+  });
+}
