@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.4.1
+
+### Patch Changes
+
+- 066116a: docs: strategic refactoring of README and documentation structure for enterprise positioning
+
 ## 1.4.0
 
 ### Minor Changes
