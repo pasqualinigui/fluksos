@@ -14,20 +14,3 @@ services:
 
 volumes:
   postgres-data:
-services:
-  db:
-    # Using pgvector by default: AI-ready (RAG) at no extra cost
-    image: pgvector/pgvector:0.8.2-pg18-trixie
-    container_name: nextjs-postgres
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: my-db
-    ports:
-      - "127.0.0.1:5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql
-
-volumes:
-  postgres-data:

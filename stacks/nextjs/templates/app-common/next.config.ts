@@ -1,5 +1,4 @@
 import path from 'path';
-import { withSentryConfig } from '@sentry/nextjs';
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
@@ -33,10 +32,4 @@ const nextConfig: NextConfig = {
   }
 };
 
-const sentryOptions = {
-  silent: true,
-  widenClientFileUpload: true,
-  hideSourceMaps: true
-};
-
-export default withSentryConfig(nextConfig, sentryOptions);
+export default nextConfig;

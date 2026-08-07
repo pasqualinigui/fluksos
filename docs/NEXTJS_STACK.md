@@ -58,7 +58,8 @@ We use `biome` natively. It formats and lints your code in milliseconds.
 ### 3. Comprehensive Observability
 Running in production blind is amateur. Fluksos injects a complete observability suite:
 - **OpenTelemetry (OTel):** Pre-configured tracing for all Server Actions and Database queries.
-- **Metrics/Dashboards:** A Docker Compose file with **Grafana** and **Prometheus** ready for local telemetry analysis.
+- **Client Telemetry:** Grafana Faro embedded to capture browser exceptions and Web Vitals.
+- **Metrics/Dashboards:** A Docker Compose file with **Grafana, Prometheus, Loki, Tempo, and Pyroscope** ready for local, cross-correlated telemetry analysis.
 - **Load Testing:** Built-in `k6` (v2.0) scripts in `tests/` to benchmark your API limits before deploying. Native support for OpenTelemetry export and MCP (AI-Agent ready).
 
 ### 4. AEO (AI Engine Optimization) & SEO
