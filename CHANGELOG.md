@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.4.0
+
+### Minor Changes
+
+- feat(observability): replace sentry with grafana faro and fix telemetry correlations
+
 ## 1.3.1
 
 ### Patch Changes
