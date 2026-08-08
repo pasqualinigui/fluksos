@@ -25,6 +25,7 @@
   },
   "keywords": [
     "nextjs",
+    "react",
     "nestjs",
     "postgres",
     "scaffold",
@@ -33,7 +34,10 @@
     "enterprise",
     "deterministic",
     "monorepo",
-    "turborepo"
+    "turborepo",
+    "opentelemetry",
+    "architecture",
+    "platform-engineering"
   ],
   "author": "Guilherme Pasqualini",
   "license": "MIT",

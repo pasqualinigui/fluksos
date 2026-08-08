@@ -47,3 +47,12 @@ If you deploy a Tier 3 application, your authentication is handled by **Better A
 
 - **Enforced Email Verification:** An AST rule ensures that `requireEmailVerification` is set to `true`. You cannot disable it without explicitly overriding the Fluksos validation engine.
 - **SQL Injection Prevention:** `drizzle-orm` natively sanitizes all inputs. Combined with Valibot's schema parsing in the Server Actions, malicious payloads are dropped before they ever reach the ORM layer.
+
+---
+
+## 4. Data Privacy & Leakage Prevention (LGPD/GDPR)
+
+Leaking sensitive server data into the frontend is the most common vulnerability in React applications. Fluksos mitigates this through strict environmental separation and AST governance:
+
+- **Environment Variable Isolation:** Only non-sensitive URLs (e.g., `NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_FARO_COLLECTOR_URL`) are exposed to the client. Critical tokens (Database, Redis, Auth secrets) are strictly server-side.
+- **AST Data Governance:** The internal AST Parser blocks `db` or repository imports inside `"use client"` components. This architectural constraint physically prevents developers from accidentally serializing entire database objects (which may contain PII or password hashes) and sending them as props to the browser, ensuring Data Minimization (*LGPD/GDPR by Design*).
