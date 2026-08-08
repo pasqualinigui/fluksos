@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.4.2
+
+### Patch Changes
+
+- c51713e: fix: version bump to resolve npm registry collision (1.4.1 already published)
+
 ## 1.4.1
 
 ### Patch Changes
