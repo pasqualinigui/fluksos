@@ -23,6 +23,7 @@ export const metadata: Metadata = {
 	},
 	description:
 		"A concise and factual description of the application for traditional crawlers and AI-powered response mechanisms.",
+	keywords: ["Keyword1", "Keyword2", "Keyword3"],
 	applicationName: "ProductName",
 	metadataBase: new URL("https://domain.com"),
 	alternates: {
