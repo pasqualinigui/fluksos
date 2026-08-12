@@ -148,7 +148,9 @@ function printHelp() {
   console.log(`  \x1b[90m${'react-vite'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m`)
   console.log(`  \x1b[90m${'nestjs'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m\n`)
 
-  console.log('  \x1b[90mRun "fluksos <stack> --help" for detailed stack features.\x1b[0m')
+  console.log(
+    '  \x1b[1m\x1b[36m💡 Run "fluksos <stack> --help" for detailed stack features.\x1b[0m',
+  )
 }
 
 /**
