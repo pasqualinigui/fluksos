@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.5.4
+
+### Patch Changes
+
+- d7ad16d: fix(cli): re-align help menu and brighten feature text colors
+
 ## 1.5.3
 
 ### Patch Changes
