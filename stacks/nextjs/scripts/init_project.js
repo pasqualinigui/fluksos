@@ -32,8 +32,15 @@ const STACK_VERSIONS = {
   turbo: '2.9.18',
   lefthook: '2.1.9',
   opentelemetryApi: '1.9.1',
-  vercelOtel: '2.1.3',
-  faroWebSdk: '2.8.2',
+  otelSdkNode: '0.221.0',
+  otelExporterTraceOtlpHttp: '0.221.0',
+  otelInstrumentationHttp: '0.220.0',
+  otelInstrumentationPg: '0.72.0',
+  otelInstrumentation: '0.221.0',
+  otelResources: '1.30.0',
+  otelSemanticConventions: '1.34.0',
+  otelSdkTraceBase: '1.30.0',
+  faroWebSdk: '1.14.0',
   faroWebTracing: '2.8.2',
   faroTransportOtlpHttp: '2.8.2',
   vitest: '4.1.9',
@@ -45,6 +52,7 @@ const STACK_VERSIONS = {
   typesPg: '8.20.0',
   upstashRatelimit: '2.0.8',
   upstashRedis: '1.38.0',
+  ioredis: '5.4.1',
   otelApiLogs: '0.52.1',
   otelSdkLogs: '0.52.1',
   otelExporterLogsOtlpHttp: '0.52.1',
@@ -426,6 +434,17 @@ async function installTierDependencies(ctx) {
         'add',
         `next-safe-action@${STACK_VERSIONS.nextSafeAction}`,
         `server-only@${STACK_VERSIONS.serverOnly}`,
+        '--ignore-scripts',
+      ],
+      { cwd: ctx.appDir },
+    )
+  }
+
+  if (ctx.tier === 2) {
+    runCommand(
+      'pnpm',
+      [
+        'add',
         `@upstash/ratelimit@${STACK_VERSIONS.upstashRatelimit}`,
         `@upstash/redis@${STACK_VERSIONS.upstashRedis}`,
         '--ignore-scripts',
@@ -443,6 +462,22 @@ async function installTierDependencies(ctx) {
         `pg@${STACK_VERSIONS.pg}`,
         `better-auth@${STACK_VERSIONS.betterAuth}`,
         `@tanstack/react-query@${STACK_VERSIONS.tanstackQuery}`,
+        `ioredis@${STACK_VERSIONS.ioredis}`,
+        `@opentelemetry/api@${STACK_VERSIONS.opentelemetryApi}`,
+        `@opentelemetry/sdk-node@${STACK_VERSIONS.otelSdkNode}`,
+        `@opentelemetry/exporter-trace-otlp-http@${STACK_VERSIONS.otelExporterTraceOtlpHttp}`,
+        `@opentelemetry/instrumentation-http@${STACK_VERSIONS.otelInstrumentationHttp}`,
+        `@opentelemetry/instrumentation-pg@${STACK_VERSIONS.otelInstrumentationPg}`,
+        `@opentelemetry/instrumentation@${STACK_VERSIONS.otelInstrumentation}`,
+        `@opentelemetry/resources@${STACK_VERSIONS.otelResources}`,
+        `@opentelemetry/semantic-conventions@${STACK_VERSIONS.otelSemanticConventions}`,
+        `@opentelemetry/sdk-trace-base@${STACK_VERSIONS.otelSdkTraceBase}`,
+        `@opentelemetry/api-logs@${STACK_VERSIONS.otelApiLogs}`,
+        `@opentelemetry/sdk-logs@${STACK_VERSIONS.otelSdkLogs}`,
+        `@opentelemetry/exporter-logs-otlp-http@${STACK_VERSIONS.otelExporterLogsOtlpHttp}`,
+        `@grafana/faro-web-sdk@${STACK_VERSIONS.faroWebSdk}`,
+        `@grafana/faro-web-tracing@${STACK_VERSIONS.faroWebTracing}`,
+        `@grafana/faro-transport-otlp-http@${STACK_VERSIONS.faroTransportOtlpHttp}`,
         `@pyroscope/nodejs@${STACK_VERSIONS.pyroscopeNodejs}`,
         '--ignore-scripts',
       ],
@@ -498,6 +533,9 @@ async function applyTierTemplates(ctx) {
   if (ctx.tier === 3) {
     copyDirTemplate(path.join(ctx.templatesRoot, 'app-tier-3'), ctx.appDir)
 
+    // Remove Tier 2 rate-limit.ts as Tier 3 uses Traefik proxy rate limiting
+    fs.rmSync(path.join(ctx.appDir, 'src', 'lib', 'rate-limit.ts'), { force: true })
+
     // Auto-create .env from .env.example so drizzle-kit and the app work out of the box
     const envExample = path.join(ctx.appDir, '.env.example')
     const envFile = path.join(ctx.appDir, '.env')
@@ -510,12 +548,15 @@ async function applyTierTemplates(ctx) {
         'db:generate': 'drizzle-kit generate --config=drizzle.config.ts',
         'db:push': 'drizzle-kit push --config=drizzle.config.ts',
         'db:studio': 'drizzle-kit studio --config=drizzle.config.ts',
+        'db:migrate': 'tsx src/db/migrate.ts',
       },
     })
   }
 }
 
 async function applyObservabilityTemplates(ctx) {
+  if (ctx.tier !== 3) return
+
   copyDirTemplate(
     path.join(ctx.templatesRoot, 'observability'),
     path.join(ctx.workspaceRoot, 'observability'),
@@ -551,7 +592,6 @@ function assertRequiredTemplateFiles(ctx) {
   const requiredDirs = [
     path.join(ctx.templatesRoot, 'root'),
     path.join(ctx.templatesRoot, 'app-common'),
-    path.join(ctx.templatesRoot, 'observability'),
   ]
 
   if (ctx.tier >= 2) {
@@ -559,6 +599,7 @@ function assertRequiredTemplateFiles(ctx) {
   }
   if (ctx.tier === 3) {
     requiredDirs.push(path.join(ctx.templatesRoot, 'app-tier-3'))
+    requiredDirs.push(path.join(ctx.templatesRoot, 'observability'))
   }
 
   for (const dir of requiredDirs) {
@@ -574,6 +615,8 @@ function assertRequiredTemplateFiles(ctx) {
     path.join(ctx.templatesRoot, 'app-common', 'postcss.config.mjs'),
     path.join(ctx.templatesRoot, 'app-common', 'tsconfig.json'),
     path.join(ctx.templatesRoot, 'app-common', 'components.json'),
+    path.join(ctx.templatesRoot, 'app-common', 'Dockerfile'),
+    path.join(ctx.templatesRoot, 'app-common', '.dockerignore'),
     path.join(ctx.templatesRoot, 'app-common', 'src', 'app', 'globals.css'),
     path.join(ctx.templatesRoot, 'app-common', 'src', 'proxy.ts'),
     path.join(ctx.templatesRoot, 'app-common', 'src', 'components', 'seo', 'json-ld.tsx'),
@@ -582,6 +625,8 @@ function assertRequiredTemplateFiles(ctx) {
     path.join(ctx.templatesRoot, 'app-common', 'src', 'app', 'sitemap.ts'),
     path.join(ctx.templatesRoot, 'app-common', 'src', 'app', 'llms.txt', 'route.ts'),
     path.join(ctx.templatesRoot, 'app-common', 'src', 'app', 'llms-full.txt', 'route.ts'),
+    path.join(ctx.templatesRoot, 'app-common', 'src', 'app', 'error.tsx'),
+    path.join(ctx.templatesRoot, 'app-common', 'src', 'app', 'global-error.tsx'),
   ]
 
   if (ctx.tier >= 2) {
@@ -607,6 +652,14 @@ function assertRequiredTemplateFiles(ctx) {
         'route.ts',
       ),
     )
+    requiredFiles.push(path.join(ctx.templatesRoot, 'app-tier-3', 'src', 'instrumentation.ts'))
+    requiredFiles.push(
+      path.join(ctx.templatesRoot, 'app-tier-3', 'src', 'components', 'faro-init.tsx'),
+    )
+    requiredFiles.push(path.join(ctx.templatesRoot, 'app-tier-3', 'src', 'db', 'migrate.ts'))
+    requiredFiles.push(
+      path.join(ctx.templatesRoot, 'app-tier-3', '.github', 'workflows', 'production-migrate.yml'),
+    )
   }
 
   for (const file of requiredFiles) {
@@ -624,6 +677,8 @@ async function validateScaffold(ctx) {
     path.join(ctx.appDir, 'tsconfig.json'),
     path.join(ctx.appDir, 'components.json'),
     path.join(ctx.appDir, 'vitest.config.ts'),
+    path.join(ctx.appDir, 'Dockerfile'),
+    path.join(ctx.appDir, '.dockerignore'),
     path.join(ctx.appDir, 'src', 'app', 'globals.css'),
     path.join(ctx.appDir, 'src', 'app', 'layout.tsx'),
     path.join(ctx.appDir, 'src', 'app', 'page.tsx'),
@@ -668,59 +723,57 @@ async function validateScaffold(ctx) {
     assertFileExists(path.join(ctx.appDir, 'src', 'db', 'index.ts'))
     assertFileExists(path.join(ctx.appDir, 'src', 'lib', 'auth.ts'))
     assertFileExists(path.join(ctx.appDir, 'src', 'app', 'api', 'auth', '[...all]', 'route.ts'))
+    assertFileExists(path.join(ctx.appDir, 'src', 'instrumentation.ts'))
+    assertFileExists(path.join(ctx.appDir, 'src', 'components', 'faro-init.tsx'))
   }
 }
 
 function printNextSteps(ctx) {
-  // Imprime a mensagem de sucesso em verde
   console.log(
-    '\n\x1b[32m[DONE] 🚀 Scaffold complete! Welcome to the Fluksos Enterprise ecosystem.\x1b[0m\n',
+    '\n\x1b[1m\x1b[32m[DONE] 🚀 Scaffold complete! Welcome to the Fluksos Enterprise ecosystem.\x1b[0m\n',
   )
 
-  console.log('\x1b[1m\x1b[36mNext steps to start coding:\x1b[0m')
+  console.log('\x1b[1m\x1b[36m👇 NEXT STEPS\x1b[0m')
   console.log(`  cd ${ctx.targetDirectory}`)
   if (!ctx.shouldInstall) console.log('  pnpm install')
   console.log('  pnpm dev')
 
   if (ctx.tier === 3) {
-    console.log('\n\x1b[1m\x1b[33m# 🗄️  Database & ORM (Tier 3):\x1b[0m')
-    console.log('  \x1b[90m1. Start the PostgreSQL + pgvector container:\x1b[0m')
-    console.log('     \x1b[32mdocker compose -f apps/web/docker-compose.yml up -d\x1b[0m')
-    console.log('  \x1b[90m2. Generate SQL migrations based on your Drizzle schema:\x1b[0m')
-    console.log('     \x1b[32mpnpm --filter web db:generate\x1b[0m')
-    console.log('  \x1b[90m3. Apply migrations to the database:\x1b[0m')
-    console.log('     \x1b[32mpnpm --filter web db:push\x1b[0m')
-    console.log('  \x1b[90m4. Open Drizzle Studio to view your tables visually:\x1b[0m')
-    console.log('     \x1b[32mpnpm --filter web db:studio\x1b[0m')
-  }
-
-  console.log('\n\x1b[1m\x1b[35m# 📊 Observability & Load Testing (Production Ready):\x1b[0m')
-  console.log(
-    '  \x1b[90m1. Start the Telemetry Stack (Grafana, Prometheus, Tempo, Loki, Pyroscope):\x1b[0m',
-  )
-  console.log(
-    '     \x1b[32mdocker compose -f observability/docker-compose.observability.yml up -d\x1b[0m',
-  )
-  console.log('  \x1b[90m2. Start the Next.js app to emit traces:\x1b[0m')
-  if (ctx.tier === 3) {
+    console.log('\n\x1b[1m\x1b[33m🗄️ DATABASE & ORM (Tier 3)\x1b[0m')
     console.log(
-      '     \x1b[90m(To enable Continuous Profiling, set \x1b[37mPYROSCOPE_ENABLED="true"\x1b[90m in your .env file)\x1b[0m',
+      '  \x1b[90m• Start Postgres:  \x1b[0m \x1b[32mdocker compose -f apps/web/docker-compose.yml up -d\x1b[0m',
+    )
+    console.log('  \x1b[90m• Generate schemas:\x1b[0m \x1b[32mpnpm db:generate\x1b[0m')
+    console.log('  \x1b[90m• View tables:     \x1b[0m \x1b[32mpnpm db:studio\x1b[0m')
+    console.log(
+      '  \x1b[90m• CI/CD Migration: \x1b[0m \x1b[32mpnpm db:migrate\x1b[0m \x1b[90m(Runs automatically in GitHub Actions)\x1b[0m',
     )
   }
-  console.log('     \x1b[32mpnpm dev\x1b[0m')
-  console.log(
-    '  \x1b[90m3. Access Grafana (Defaults to \x1b[37madmin / admin\x1b[90m. Securely bound to localhost):\x1b[0m',
-  )
-  console.log('     \x1b[32mhttp://127.0.0.1:3001\x1b[0m')
-  console.log(
-    '  \x1b[90m4. Access Pyroscope UI (Continuous Profiling - Optional standalone view):\x1b[0m',
-  )
-  console.log('     \x1b[32mhttp://127.0.0.1:4040\x1b[0m')
-  console.log('  \x1b[90m5. Stress test your API limits:\x1b[0m')
-  console.log('     \x1b[32mcd tests/performance/k6 && k6 run --out opentelemetry smoke.js\x1b[0m')
-  console.log(
-    '  \x1b[90m* Note: Requires K6 installed locally (https://grafana.com/docs/k6/latest/set-up/install-k6/)\x1b[0m',
-  )
+
+  if (ctx.tier >= 2) {
+    console.log('\n\x1b[1m\x1b[35m🛡️ PROXY & SECURITY\x1b[0m')
+    if (ctx.tier === 3) {
+      console.log(
+        '  \x1b[90m• Traefik Proxy and TCP Rate Limiting are active out-of-the-box.\x1b[0m',
+      )
+      console.log(
+        '  \x1b[90m• GitHub Actions for Trivy (SCA) and ZAP (DAST) are configured in .github/workflows.\x1b[0m',
+      )
+    } else {
+      console.log('  \x1b[90m• Upstash Redis Rate Limiting is configured in safe-action.ts.\x1b[0m')
+    }
+  }
+
+  if (ctx.tier === 3) {
+    console.log('\n\x1b[1m\x1b[34m📊 OBSERVABILITY (LGTM Stack)\x1b[0m')
+    console.log(
+      '  \x1b[90m• Start Telemetry: \x1b[0m \x1b[32mdocker compose -f observability/docker-compose.observability.yml up -d\x1b[0m',
+    )
+    console.log(
+      '  \x1b[90m• Access Grafana:  \x1b[0m \x1b[32mhttp://127.0.0.1:3001\x1b[0m \x1b[90m(admin/admin)\x1b[0m',
+    )
+    console.log('  \x1b[90m• Access Pyroscope:\x1b[0m \x1b[32mhttp://127.0.0.1:4040\x1b[0m')
+  }
 }
 
 async function runStep(ctx, name, fn) {

@@ -1,8 +1,45 @@
 services:
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik-proxy
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: on-failure:3
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=proxy"
+
+  redis:
+    image: redis:7-alpine
+    container_name: nextjs-redis
+    restart: on-failure:3
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=cache"
+
   db:
     # Using pgvector by default: AI-ready (RAG) at no extra cost
     image: pgvector/pgvector:0.8.2-pg18-trixie
     container_name: nextjs-postgres
+    restart: on-failure:3
+    cpus: "1.0"
+    mem_limit: "1g"
+    shm_size: 128mb
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -10,7 +47,42 @@ services:
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=database"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nextjs-app
+    restart: on-failure:3
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/my-db
+      - REDIS_URL=redis://redis:6379
+      - NODE_ENV=production
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=app"
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextjs.rule=Host(`localhost`)"
+      - "traefik.http.routers.nextjs.entrypoints=web"
+      - "traefik.http.services.nextjs.loadbalancer.server.port=3000"
+      # Rate Limiting Middleware
+      - "traefik.http.middlewares.ratelimit.ratelimit.average=100"
+      - "traefik.http.middlewares.ratelimit.ratelimit.burst=50"
+      - "traefik.http.routers.nextjs.middlewares=ratelimit"
 
 volumes:
   postgres-data:

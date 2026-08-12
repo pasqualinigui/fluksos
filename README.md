@@ -1,128 +1,97 @@
----
-description: The Enterprise Scaffolding & Validation Engine
-audience: End Users, Developers, Open Source Community
----
-
-<div align="center">
-
-<pre style="font-family: monospace; display: inline-block; text-align: left; color: #10b981; font-weight: bold;">
-███████╗██╗     ██╗   ██╗██╗  ██╗███████╗ ██████╗ ███████╗
-██╔════╝██║     ██║   ██║██║ ██╔╝██╔════╝██╔═══██╗██╔════╝
-█████╗  ██║     ██║   ██║█████╔╝ ███████╗██║   ██║███████╗
-██╔══╝  ██║     ██║   ██║██╔═██╗ ╚════██║██║   ██║╚════██║
-██║     ███████╗╚██████╔╝██║  ██╗███████║╚██████╔╝███████║
-╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚══════╝
-</pre>
-
-**The Enterprise Scaffolding & Validation Engine**
-
-*Deterministic, opinionated scaffolds for production-grade applications. Zero config, 100% governance.*
-
-<br/>
-
-[![npm version](https://img.shields.io/npm/v/fluksos?style=flat-square&color=cb3837&logo=npm)](https://www.npmjs.com/package/fluksos)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://github.com/pasqualinigui/fluksos/blob/main/LICENSE)
-[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg?style=flat-square)](.github/CODE_OF_CONDUCT.md)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D24.0.0-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
-[![pnpm](https://img.shields.io/badge/pnpm-11.6.0-f69220?style=flat-square&logo=pnpm&logoColor=white)](https://pnpm.io/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-
-🌍 *[Read in Portuguese (Leia em Português)](./README.pt-br.md)*
-
+`<div align="center">
+  <br />
+  <h1>🚀 FLUKSOS</h1>
+  <p><b>The Top 1% Senior Scaffolding Engine for Enterprise Web Applications</b></p>
+  <br />
 </div>
 
----
-
-## ⚡ The Modern Ecosystem Problem
-
-When a Senior Engineer starts a new project, they don't just run `create-react-app` and start coding. Setting up a truly scalable, production-ready environment is plagued by **Configuration Fatigue**.
-
-It typically takes **3 to 5 working days** to manually glue together Turborepo, Biome, OpenTelemetry, Grafana dashboards, CI/CD pipelines, Docker architectures, and Git hooks. Worse still, as teams grow, enforcing architectural patterns (like preventing database calls from client components) becomes a code review nightmare.
-
-### The Fluksos Solution
-
-Fluksos is not just a boilerplate generator. It is a **Platform Engineering Governance Engine**. We took the exact infrastructure used by top-tier tech companies and compressed 5 days of setup into a **10-second CLI command**.
-
-| Pain Point | The Fluksos Solution |
-| :--- | :--- |
-| 🐢 **Slow tooling & formatting** | Pre-configured with **Biome** and **Turbopack** for sub-millisecond linting and builds. |
-| 💸 **Vendor lock-in observability** | Injects a full local **OpenTelemetry** stack (Tempo, Loki, Pyroscope, Grafana Faro). |
-| 🛡️ **Sloppy PRs & bad code** | Built-in **AST Tribunal** parser that aggressively bans architectural violations at pre-commit. |
-| 🤖 **Invisible to AI agents** | **AEO (AI Engine Optimization)** ready. Auto-generates `llms.txt` and semantic JSON-LD. |
-| ⚠️ **Vulnerable endpoints** | Out-of-the-box **Upstash Redis Rate Limiting**, strict CSP headers, and Better Auth. |
+> **Fluksos** is not just another CLI. It is a deterministic engine designed to scaffold production-hardened, ultra-modern Next.js monorepos with zero hallucination. Built for Senior and Staff Engineers who demand architectural perfection from day zero.
 
 ---
 
-## ⚙️ How The Engine Works
+## 🌟 Why Fluksos? The "Top 1%" Difference
 
-Fluksos uses a deterministic scaffolding pipeline. When you run the CLI, it evaluates your environment, creates a monorepo, applies strict tier-based templates, and binds everything with Git hooks.
+Most generators give you a basic `create-next-app` and leave the hard parts to you. Fluksos delivers an ecosystem ready to scale to millions of requests, embedding industry best practices across three distinct tiers of infrastructure.
 
-```mermaid
-graph LR
-    A[Fluksos CLI] --> B{Choose Stack}
-    B -->|Next.js| C[Scaffold Monorepo]
-    C --> D[Apply Base Tier 1]
-    D --> E[Inject AST Validators]
-    E --> F[Inject Biome/Lefthook]
-    F --> G{Select Tier}
-    G -->|Tier 2| H[Inject Rate Limiting & Auth]
-    G -->|Tier 3| I[Inject DB, OTel & Grafana Stack]
-    H --> J[Ready for Production]
-    I --> J
-```
+### 🛡️ Uncompromising Security & CI/CD
+- **Traefik Edge Proxy**: Built-in container-native Traefik v3 proxy acting as an API Gateway, shielding your Next.js node server from brute force attacks.
+- **Automated DAST & SCA**: Pre-configured GitHub Actions for **OWASP ZAP** (Dynamic Application Security Testing) and **Trivy** (Container Vulnerability Scanning).
+- **Hardened Configurations**: Strict Content-Security-Policies (CSP), HSTS, and rate-limiting natively implemented.
+
+### 📊 Enterprise Observability (LGTM Stack)
+- **Zero-Config Telemetry**: Tier 3 ships with a full Docker Compose observability stack powered by Grafana Alloy.
+- **Traces, Metrics, Logs**: Seamless integration with Prometheus, Loki, and Tempo via OpenTelemetry.
+- **Continuous Profiling**: Grafana Pyroscope enabled out-of-the-box for granular CPU/Memory bottleneck identification.
+
+### ⚡ Extreme Performance
+- **TCP Redis Over HTTP**: Ditched slow serverless abstractions in favor of bare-metal TCP Redis (ioredis) for sub-millisecond caching and rate limiting in production.
+- **K6 Load Testing**: Pre-written K6 performance scripts using the new v2.0+ Assertion API to validate your throughput limits.
+
+### 🤖 AI Engine Optimization (AEO)
+- Built-in `llms.txt` and `/llms-full.txt` API routes to ensure LLM crawlers (like ChatGPT, Claude, and Perplexity) index your application perfectly.
+- Semantic HTML and enforced Alt-texts validated strictly at scaffolding time.
 
 ---
 
-## 📦 Quick Start
+## 🏗️ The 3 Tiers of Architecture
 
-Initialize a brand new Enterprise application in seconds.
+Fluksos allows you to scaffold based on your deployment strategy:
+
+### **Tier 1: Minimalist Edge**
+Perfect for Vercel/Netlify deployments. Pure Next.js App Router, Tailwind v4, and Biome. No heavy backend dependencies.
+
+### **Tier 2: Serverless Scale**
+Introduces Zustand (isolated UI state) and Valibot. Ready for serverless architectures with basic API route scaffolding.
+
+### **Tier 3: Container Native (The Enterprise Standard)**
+A fully dockerized environment. Includes:
+- Next.js running in a lightweight Node Alpine container.
+- PostgreSQL + pgvector for AI workloads.
+- Drizzle ORM with automated CI/CD Migration scripts (`migrate.ts`).
+- TCP Redis container for high-speed rate-limiting.
+- Traefik API Gateway.
+- Full LGTM Observability Stack.
+
+---
+
+## 🚀 Quick Start
+
+Ensure you have Node.js 20+ and `pnpm` installed.
 
 ```bash
-# 1. Global install (Recommended)
-npm install -g fluksos
-
-# 2. Explore available stacks
-fluksos --help
-
-# 3. Generate a Tier-3 Enterprise Project
-fluksos init nextjs my-app --tier 3
+# Scaffold a new Tier 3 Enterprise Workspace
+npx fluksos@latest init nextjs my-app ./my-app --tier 3
 ```
 
-*(Note: We strongly recommend running the command in an empty directory or allowing it to create `my-app` for you.)*
+> **Note**: Fluksos requires `pnpm` for its strict Turborepo workspace configuration.
 
 ---
 
-## 🛡️ The AST Tribunal (Governance)
+## 🛠️ The Fluksos Ecosystem
 
-Fluksos ships with its own custom Abstract Syntax Tree (AST) parser that runs locally via `lefthook` on every commit. It enforces what code reviewers often miss. 
+### Code Generation
+Never write boilerplate Server Actions or RPC hooks manually again. Fluksos maintains strict architectural boundaries:
 
-If a junior developer tries to import a database connection directly into a Server Component Page instead of using a proper Repository pattern, **the commit is blocked**. If they try to use `@ts-ignore` or the legacy `axios`, **the commit is blocked**. Fluksos guarantees that your team's code quality remains pristine.
+```bash
+npx fluksos@latest generate action
+npx fluksos@latest generate rpc-hook
+```
 
-[Read the AST Validator Documentation ➡️](./docs/VALIDATORS.md)
+### Continuous Validation
+Fluksos includes a custom AST parser to enforce rules that standard linters miss (e.g., banning `createContext`, enforcing `server-only` boundaries).
 
----
-
-## 📚 The Technical Manual
-
-Fluksos is a massive undertaking. We have segmented our deep-dive technical documentation into the `docs/` folder for maintainers, tech leads, and developers.
-
-- 📖 **[Table of Contents](./docs/README.md)**: Explore the full technical manual.
-- 🏗️ **[Architecture & Tiers](./docs/NEXTJS_STACK.md)**: Deep dive into the Turborepo layout, Docker DB Workflow, and Observability.
-- 🔒 **[Security & Rate Limiting](./docs/SECURITY.md)**: Zero-Day security via CSP, HSTS, and Upstash.
-- ⚡ **[Code Generators](./docs/GENERATORS.md)**: How to auto-generate Next.js Server Actions and Hono RPC Hooks.
+```bash
+npx fluksos@latest validate
+```
 
 ---
 
-## 🧑‍💻 For Contributors
+## 📚 Documentation
 
-Are you an open-source contributor looking to add a new stack (e.g., NestJS) or modify the core engine? Please read the internal manuals:
+For internal contributors and AI agents working on this CLI, refer strictly to [AGENTS.md](./AGENTS.md).
 
-- [**AGENTS.md**](./AGENTS.md): The core mapping of the CLI dispatcher and strict rules for AI Coding Assistants working on this repo.
-- [**Next.js Maintainer Guide**](./stacks/nextjs/README.md): The internal pipeline of `init_project.js` and template wiring.
+## 🤝 Contributing
+All PRs must pass the rigorous Vitest architecture validations. See `.github/PULL_REQUEST_TEMPLATE.md` for guidelines.
 
----
-
-<div align="center">
-  Built with obsession for clean architecture. <br/>
-  <a href="https://github.com/pasqualinigui">Follow the Creator</a>
-</div>
+## 📄 License
+MIT © Fluksos

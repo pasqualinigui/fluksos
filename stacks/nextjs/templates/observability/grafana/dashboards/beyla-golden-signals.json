@@ -1,0 +1,43 @@
+{
+  "title": "Beyla Golden Signals (eBPF)",
+  "description": "Auto-instrumented eBPF Golden Signals (Rate, Errors, Duration)",
+  "tags": ["beyla", "ebpf", "nextjs"],
+  "timezone": "browser",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Request Rate (RPS)",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_duration_seconds_count[1m])) by (http_route)",
+          "legendFormat": "{{http_route}}"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Error Rate (5xx)",
+      "targets": [
+        {
+          "expr": "sum(rate(http_server_duration_seconds_count{http_status_code=~\"5..\"}[1m])) by (http_route)",
+          "legendFormat": "{{http_route}}"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 }
+    },
+    {
+      "type": "timeseries",
+      "title": "P99 Duration (Latency)",
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, sum(rate(http_server_duration_seconds_bucket[1m])) by (le, http_route))",
+          "legendFormat": "{{http_route}}"
+        }
+      ],
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 }
+    }
+  ],
+  "schemaVersion": 39,
+  "version": 1
+}

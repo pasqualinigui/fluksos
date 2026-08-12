@@ -118,30 +118,37 @@ function runScript(stackName, scriptName, scriptArgs) {
   }
 }
 
-/**
- * Prints the CLI help text with all available stacks, generators, and usage examples.
- */
 function printHelp() {
-  console.log('\x1b[1m\x1b[36m🚀 USAGE\x1b[0m')
-  console.log('  $ fluksos <command> [stack] [options]\n')
+  console.log('\x1b[1mFluksos CLI - The Top 1% Senior Scaffolding Engine\x1b[0m\n')
+  console.log('\x1b[1m\x1b[36mUSAGE\x1b[0m')
+  console.log('  $ npx fluksos@latest [COMMAND] [OPTIONS]\n')
 
-  console.log('\x1b[1m\x1b[36m📚 AVAILABLE STACKS\x1b[0m')
+  console.log('\x1b[1m\x1b[36mCORE COMMANDS\x1b[0m')
+  console.log(
+    '  \x1b[32minit\x1b[0m [stack] [project-name] [path]  Scaffold a new enterprise project',
+  )
+  console.log(
+    '  \x1b[32mgenerate\x1b[0m [resource]                 Generate architectural boundaries (Actions, RPCs)',
+  )
+  console.log(
+    '  \x1b[32mvalidate\x1b[0m                            Run AST validation rules against current codebase\n',
+  )
+
+  console.log('\x1b[1m\x1b[36mOPTIONS\x1b[0m')
+  console.log(
+    '  \x1b[33m-t, --tier <number>\x1b[0m                 Select architecture tier (1=Vercel, 2=Serverless, 3=Docker Native)',
+  )
+  console.log('  \x1b[33m--no-install\x1b[0m                        Skip package installation')
+  console.log('  \x1b[33m--no-git\x1b[0m                            Skip git initialization\n')
+
+  console.log('\x1b[1m\x1b[36mAVAILABLE STACKS\x1b[0m')
   for (const [name] of Object.entries(STACK_REGISTRY)) {
     console.log(`  \x1b[1m\x1b[32m${name.padEnd(10)}\x1b[0m \x1b[90m— (Available)\x1b[0m`)
   }
   console.log(`  \x1b[90m${'react-vite'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m`)
-  console.log(`  \x1b[90m${'nestjs'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m`)
-  console.log('')
+  console.log(`  \x1b[90m${'nestjs'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m\n`)
 
-  console.log('\x1b[1m\x1b[36m💡 HOW TO EXPLORE\x1b[0m')
-  console.log('  To see specific details, architecture tiers, and generators for a stack, run:')
-  console.log('  $ fluksos \x1b[32m<stack>\x1b[0m --help\n')
-
-  console.log('\x1b[1m\x1b[36m📋 EXAMPLES\x1b[0m')
-  console.log('  \x1b[90m# Scaffold a new project in a specific folder\x1b[0m')
-  console.log('  $ fluksos init nextjs my-app --tier 3\n')
-  console.log('  \x1b[90m# Scaffold in the current directory (.)\x1b[0m')
-  console.log('  $ fluksos init nextjs . --tier 2\n')
+  console.log('  \x1b[90mRun "fluksos <stack> --help" for detailed stack features.\x1b[0m')
 }
 
 /**
@@ -190,8 +197,27 @@ function printStackHelp(stackName) {
 // ==========================================
 // Main
 // ==========================================
-console.log('\x1b[1m\x1b[32m%s\x1b[0m', ASCII_LOGO)
-console.log('\x1b[1m\x1b[32mThe Enterprise Scaffolding & Validation Engine 🛡️ \x1b[0m')
+const lines = ASCII_LOGO.split('\n')
+// Green to Yellow gradient via Truecolor ANSI
+const colors = [
+  '',
+  '\x1b[38;2;16;185;129m', // Emerald
+  '\x1b[38;2;62;180;105m',
+  '\x1b[38;2;107;175;81m',
+  '\x1b[38;2;153;169;57m',
+  '\x1b[38;2;199;164;34m',
+  '\x1b[38;2;245;158;11m', // Amber
+  '',
+]
+
+let coloredLogo = ''
+for (let i = 0; i < lines.length; i++) {
+  if (lines[i] && colors[i]) {
+    coloredLogo += `${colors[i]}${lines[i]}\x1b[0m\n`
+  }
+}
+console.log('\x1b[1m' + coloredLogo + '\x1b[0m')
+console.log('\x1b[1m\x1b[38;2;16;185;129mThe Enterprise Scaffolding & Validation Engine 🛡️ \x1b[0m')
 
 const args = process.argv.slice(2)
 

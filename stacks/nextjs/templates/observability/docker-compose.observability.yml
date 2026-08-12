@@ -1,77 +1,205 @@
 services:
-  otel-collector:
-    image: otel/opentelemetry-collector:0.115.0
-    container_name: nextjs-otel-collector
-    command: ["--config=/etc/otel-collector-config.yaml"]
+  alloy:
+    image: grafana/alloy:v1.18.1
+    container_name: nextjs-alloy
+    user: "65534"
+    read_only: true
+    cpus: "0.5"
+    mem_limit: "512m"
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - /etc/alloy/config.alloy
     volumes:
-      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+      - ./config.alloy:/etc/alloy/config.alloy:ro
     ports:
-      - "127.0.0.1:4317:4317" # OTLP gRPC receiver
-      - "127.0.0.1:4318:4318" # OTLP HTTP receiver
-      - "127.0.0.1:8889:8889" # Prometheus exporter
+      - "127.0.0.1:4317:4317" # OTLP gRPC
+      - "127.0.0.1:4318:4318" # OTLP HTTP
+      - "127.0.0.1:12347:12347" # Faro RUM Receiver
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:12345/-/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - observability-net
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=telemetry-gateway"
+    tmpfs:
+      - /tmp
     depends_on:
-      - tempo
-      - prometheus
-      - loki
+      tempo:
+        condition: service_started
+      prometheus:
+        condition: service_healthy
+      loki:
+        condition: service_healthy
 
   loki:
-    image: grafana/loki:3.7.0
+    image: grafana/loki:3.7.6
     container_name: nextjs-loki
-    user: "0:0"
+    restart: on-failure:3
+    user: "65534"
+    read_only: true
+    cpus: "0.5"
+    mem_limit: "512m"
     command: ["-config.file=/mnt/config/loki-config.yaml"]
     volumes:
-      - ./loki-config.yaml:/mnt/config/loki-config.yaml
+      - ./loki-config.yaml:/mnt/config/loki-config.yaml:ro
       - loki-data:/tmp/loki
     ports:
       - "127.0.0.1:3100:3100"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3100/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - observability-net
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=logs"
 
   pyroscope:
-    image: grafana/pyroscope:2.1.0
+    image: grafana/pyroscope:2.2.1
     container_name: nextjs-pyroscope
+    user: "65534"
+    read_only: true
+    cpus: "0.5"
+    mem_limit: "512m"
     command: ["server"]
     ports:
       - "127.0.0.1:4040:4040"
     volumes:
       - pyroscope-data:/var/lib/pyroscope
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4040/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - observability-net
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=profiling"
+    tmpfs:
+      - /tmp
 
   tempo:
-    image: grafana/tempo:latest
+    image: grafana/tempo:3.0.0
     container_name: nextjs-tempo
-    command: [ "-config.file=/etc/tempo.yaml" ]
+    restart: on-failure:3
+    user: "65534"
+    read_only: true
+    cpus: "0.5"
+    mem_limit: "512m"
+    command: ["-config.file=/etc/tempo.yaml"]
     volumes:
-      - ./tempo.yaml:/etc/tempo.yaml
+      - ./tempo.yaml:/etc/tempo.yaml:ro
       - tempo-data:/var/tempo
     ports:
-      - "127.0.0.1:3200:3200"  # Tempo HTTP (for Grafana datasource)
+      - "127.0.0.1:3200:3200"
+    networks:
+      - observability-net
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=traces"
+    tmpfs:
+      - /tmp
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v3.13.2
     container_name: nextjs-prometheus
+    restart: on-failure:3
+    user: "65534"
+    read_only: true
+    cpus: "0.5"
+    mem_limit: "512m"
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus
       - --web.enable-remote-write-receiver
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
     ports:
       - "127.0.0.1:9090:9090"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - observability-net
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=metrics"
+    tmpfs:
+      - /tmp
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:13.1.3
     container_name: nextjs-grafana
+    user: "472"
+    read_only: true
+    cpus: "0.5"
+    mem_limit: "512m"
     volumes:
-      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
-      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
       - grafana-data:/var/lib/grafana
     ports:
       - "127.0.0.1:3001:3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - observability-net
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=visualization"
+    tmpfs:
+      - /tmp
+      - /usr/share/grafana/public
     depends_on:
-      - prometheus
-      - tempo
-      - loki
-      - pyroscope
+      prometheus:
+        condition: service_healthy
+      tempo:
+        condition: service_started
+      loki:
+        condition: service_healthy
+      pyroscope:
+        condition: service_healthy
+
+  beyla:
+    image: grafana/beyla:v3.30.0
+    container_name: nextjs-beyla
+    profiles: ["beyla"]
+    pid: host
+    privileged: true
+    cpus: "0.2"
+    mem_limit: "256m"
+    environment:
+      BEYLA_CONFIG_PATH: "/config/beyla-config.yml"
+    volumes:
+      - ./beyla-config.yml:/config/beyla-config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - observability-net
+    labels:
+      - "com.fluksos.tier=3"
+      - "com.fluksos.service=ebpf"
+    depends_on:
+      alloy:
+        condition: service_healthy
+
+networks:
+  observability-net:
+    driver: bridge
 
 volumes:
   tempo-data:

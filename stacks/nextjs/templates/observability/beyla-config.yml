@@ -1,0 +1,30 @@
+# Grafana Beyla configuration for eBPF auto-instrumentation
+# Used only when `--profile beyla` is passed to docker compose
+
+log_level: info
+
+# Select exactly which processes to instrument to avoid overhead
+discovery:
+  services:
+    - k8s_namespace: default
+      name: "fluksos-backend"
+      exe_path: "node"
+      open_ports: "3000"
+
+# Where to send the telemetry
+otel_traces_export:
+  endpoint: http://alloy:4318/v1/traces
+
+otel_metrics_export:
+  endpoint: http://alloy:4318/v1/metrics
+
+# Enable Prometheus metrics exposition
+prometheus_export:
+  port: 8999
+  path: /metrics
+
+# Internal metrics for Beyla itself
+internal_metrics:
+  prometheus:
+    port: 9090
+    path: /metrics
