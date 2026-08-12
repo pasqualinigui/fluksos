@@ -13,3 +13,6 @@ specs/
 .agent/
 .agents/
 .specify/
+
+# IDE Settings
+.vscode/
