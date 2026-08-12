@@ -72,7 +72,10 @@ fluksos/
 │       │   │           └── rate-limit.ts  # Upstash Redis limiter
 │       │   ├── app-tier-3/                # Applied for --tier 3 only
 │       │   │   ├── Dockerfile             # Standalone production build
-│       │   │   └── docker-compose.yml     # Local pgvector database
+│       │   │   ├── docker-compose.yml     # Traefik, pgvector, Redis TCP stack
+│       │   │   └── src/
+│       │   │       └── db/
+│       │   │           └── migrate.ts     # CI/CD Drizzle Migration script
 │       │   ├── observability/             # Docker Compose, OTel, Grafana Faro, Loki, Tempo, Pyroscope
 │       │   └── tests/                     # K6 performance test scripts
 │       ├── tests/
@@ -251,6 +254,22 @@ Tests import the validator functions directly and run them against the `mock-pro
 4. Add at least one validator script and register it in the stack's `validators` array.
 5. Create `stacks/<stack-name>/tests/` with fixtures and test files.
 6. Update `README.md` — move the stack from the Roadmap table to the Available Stacks table.
+
+---
+
+## Tier 3 Container Native (The Enterprise Standard)
+
+The Fluksos Next.js stack provides a robust production-ready container environment for **Tier 3** projects.
+
+1. **Proxy & Rate Limiting**: We utilize **Traefik v3** as the edge proxy to handle routing and rate limiting via Docker labels. Application-level rate limiters (like Upstash) are removed to reduce Node.js overhead.
+2. **Database & Migrations**: PostgreSQL (pgvector) is used. Database schema migrations must not run in the application container; instead, they are executed via the `src/db/migrate.ts` script triggered by GitHub Actions (`production-migrate.yml`).
+3. **Caching**: We use a self-hosted **TCP Redis** container (ioredis) instead of HTTP-based SaaS solutions for maximum performance.
+4. **CI/CD Security**: Tier 3 projects include automated GitHub workflows for **OWASP ZAP** (Dynamic Application Security Testing) and **Trivy** (Container Vulnerability Scanning).
+5. **Isolation**: Tier 1 and Tier 2 projects MUST remain perfectly clean. No OpenTelemetry or Faro dependencies, configuration files, or docker-compose services should be generated for them.
+6. **Unified Collector**: We use **Grafana Alloy** as the central telemetry gateway for logs, metrics, traces, and profiles. Do NOT use the generic OpenTelemetry Collector.
+7. **Backend Instrumentation**: We use the manual `@opentelemetry/sdk-node` alongside `@opentelemetry/instrumentation-pg` to trace Drizzle SQL queries. Do NOT use `@vercel/otel` as it abstracts away manual instrumentation capabilities.
+8. **Container Best Practices**: All Docker Compose observability files must use `restart: on-failure:3` (no `restart: always`), explicit health checks, memory limits, and avoid exposing ports to the public network.
+9. **eBPF (Beyla)**: Grafana Beyla is provided as an optional Docker profile (`--profile beyla`) because it requires elevated capabilities (`SYS_ADMIN`) and specific Linux kernel versions.
 
 ---
 
