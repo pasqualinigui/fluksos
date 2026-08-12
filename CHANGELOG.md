@@ -1,5 +1,11 @@
 # fluksos
 
+## 1.5.3
+
+### Patch Changes
+
+- 26ee4c3: chore: force version bump to 1.5.3 to resolve npm publish collision
+
 ## 1.5.2
 
 ### Patch Changes
