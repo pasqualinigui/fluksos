@@ -40,13 +40,14 @@ const STACK_REGISTRY = {
       'Turborepo Monorepo Architecture for scalable workspaces',
       'Biome for ultra-fast formatting and linting',
       'Vitest configured for unit and integration testing',
-      'Comprehensive Observability (OpenTelemetry, Grafana Faro, Loki, Tempo, Pyroscope + K6 load testing)',
-      'Built-in Upstash Rate Limiting (Redis) for Tier 2 and 3',
+      'LGTM Observability Stack (Alloy, Loki, Tempo, Pyroscope + K6 load testing)',
+      'Built-in Traefik v3 Edge Proxy and Upstash/TCP Redis Rate Limiting',
+      'Automated DAST (OWASP ZAP) & SCA (Trivy) GitHub Actions CI/CD',
       'Strict Security Headers (CSP, HSTS) out-of-the-box',
       'Lefthook enforcing pre-commit Git Hooks',
       'Strict AST Validations for Architecture & UI State boundaries',
       'Built-in AEO (AI Engine Optimization) & SEO rules',
-      'Docker-ready with standalone Next.js and pgvector PostgreSQL',
+      'Docker-ready with standalone Next.js, CI/CD Drizzle Migrations, and pgvector PostgreSQL',
     ],
     tiers: {
       1: 'Frontend only. React 19, TailwindCSS v4, Next.js App Router',
@@ -148,8 +149,9 @@ function printHelp() {
   console.log(`  \x1b[90m${'react-vite'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m`)
   console.log(`  \x1b[90m${'nestjs'.padEnd(10)}\x1b[0m \x1b[90m— (Roadmap)\x1b[0m\n`)
 
+  console.log('\x1b[1m\x1b[36m💡 PRO TIP\x1b[0m')
   console.log(
-    '  \x1b[1m\x1b[36m💡 Run "fluksos <stack> --help" for detailed stack features.\x1b[0m',
+    '  Run \x1b[1m\x1b[33mfluksos <stack> --help\x1b[0m to see detailed architecture tiers and features.\n',
   )
 }
 
@@ -167,7 +169,7 @@ function printStackHelp(stackName) {
       const [title, ...rest] = desc.split('. ')
       console.log(`  \x1b[1m\x1b[33m[${tier}] ${title}\x1b[0m`)
       if (rest.length > 0) {
-        console.log(`      \x1b[90m${rest.join('. ')}\x1b[0m`)
+        console.log(`      \x1b[37m${rest.join('. ')}\x1b[0m`)
       }
     }
     console.log('')
